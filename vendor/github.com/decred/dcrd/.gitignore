@@ -1,0 +1,6 @@
+dcrd
+cmd/dcrctl/dcrctl
+cmd/promptsecret/promptsecret
+*~
+*.pyc
+vendor/
