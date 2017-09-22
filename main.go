@@ -6,6 +6,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -17,7 +18,8 @@ import (
 )
 
 func blockHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello World"))
+	w.Write([]byte("Hello World\n"))
+	fmt.Fprintf(w, "Input Block Number: %v", r.URL.Path[7:])
 }
 
 func main() {
@@ -65,7 +67,8 @@ func main() {
 	}
 	log.Printf("Block count: %d", blockCount)
 
-	// Create a server
+	// Start an http server @ localhost:8080 and handle
+	// the /block/ URL
 	server := http.Server{
 		Addr: "localhost:8080",
 	}
