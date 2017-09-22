@@ -8,12 +8,17 @@ package main
 import (
 	"io/ioutil"
 	"log"
+	"net/http"
 	"path/filepath"
 	"time"
 
 	"github.com/decred/dcrrpcclient"
 	"github.com/decred/dcrutil"
 )
+
+func blockHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Hello World"))
+}
 
 func main() {
 	// Only override the handlers for notifications you care about.
@@ -38,8 +43,8 @@ func main() {
 	connCfg := &dcrrpcclient.ConnConfig{
 		Host:         "localhost:9109",
 		Endpoint:     "ws",
-		User:         "wheat",
-		Pass:         "snuggles12#",
+		User:         "timthomas",
+		Pass:         "CfG/BcB1M7q5haQtc6kit34mJycT+bOI",
 		Certificates: certs,
 	}
 	client, err := dcrrpcclient.New(connCfg, &ntfnHandlers)
@@ -60,6 +65,17 @@ func main() {
 	}
 	log.Printf("Block count: %d", blockCount)
 
+	// Create a server
+	server := http.Server{
+		Addr: "localhost:8080",
+	}
+	http.HandleFunc("/block/", blockHandler)
+	server.ListenAndServe()
+
+	// Wait until the client either shuts down gracefully (or the user
+	// terminates the process with Ctrl+C).
+	client.WaitForShutdown()
+
 	// For this example gracefully shutdown the client after 10 seconds.
 	// Ordinarily when to shutdown the client is highly application
 	// specific.
@@ -69,8 +85,4 @@ func main() {
 		client.Shutdown()
 		log.Println("Client shutdown complete.")
 	})
-
-	// Wait until the client either shuts down gracefully (or the user
-	// terminates the process with Ctrl+C).
-	client.WaitForShutdown()
 }
