@@ -6,7 +6,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -15,13 +14,12 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/decred/dcrd/dcrjson"
 	"github.com/decred/dcrrpcclient"
 	"github.com/decred/dcrutil"
 )
 
 func blockHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello World\n"))
-	fmt.Fprintf(w, "Input Block Number: %v\n", r.URL.Path[7:])
 	t, err := template.ParseFiles("block.html")
 	if err != nil {
 		log.Fatal(err)
@@ -35,7 +33,7 @@ func blockHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, tBlock)
 }
 
-func getBlock(client *dcrrpcclient.Client, blockStr string) *dcrrpcclient.GetBlockVerboseResult {
+func getBlock(client *dcrrpcclient.Client, blockStr string) *dcrjson.GetBlockVerboseResult {
 
 	blockInt64, err := strconv.ParseInt(blockStr, 10, 64)
 	if err != nil {
