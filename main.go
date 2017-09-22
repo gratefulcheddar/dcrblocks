@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"github.com/decred/dcrrpcclient"
@@ -19,7 +20,25 @@ import (
 
 func blockHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Hello World\n"))
-	fmt.Fprintf(w, "Input Block Number: %v", r.URL.Path[7:])
+	fmt.Fprintf(w, "Input Block Number: %v\n", r.URL.Path[7:])
+}
+
+func getBlock(client *dcrrpcclient.Client, blockStr string) *dcrrpcclient.GetBlockVerboseResult {
+
+	blockInt64, err := strconv.ParseInt(blockStr, 10, 64)
+	if err != nil {
+		log.Fatal(err)
+	}
+	blockHash, err := client.GetBlockHash(blockInt64)
+	if err != nil {
+		log.Fatal(err)
+	}
+	block, err := client.GetBlockVerbose(blockHash, true)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return block
 }
 
 func main() {
@@ -66,6 +85,8 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Printf("Block count: %d", blockCount)
+
+	getBlock(client, "80193")
 
 	// Start an http server @ localhost:8080 and handle
 	// the /block/ URL
