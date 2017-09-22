@@ -6,12 +6,11 @@
 package main
 
 import (
-	"fmt"
-	"strconv"
 	"io/ioutil"
 	"log"
-	"time"
 	"path/filepath"
+	"time"
+
 	"github.com/decred/dcrrpcclient"
 	"github.com/decred/dcrutil"
 )
@@ -60,54 +59,6 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Printf("Block count: %d", blockCount)
-
-	// getblockhash - returns hash of the block in best block chain at the given height
-	// getblock - returns information about a block given its hash
-
-	// Get blockhash from user input block height.
-	var response string	
-	for response != "exit" {
-
-		log.Println("Enter a block height to party: ")
-
-		fmt.Scan(&response)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if len(response) < 7 {
-
-			netInfo, err := client.GetInfo()
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			isInteger := true
-
-			for i := 0; i < len(response); i++ {
-				if response[i] < 47 || response[i] > 57 {
-					isInteger = false
-				}
-			}
-
-			if isInteger {
-				blockInt, _ := strconv.Atoi(response)
-				blockInt64 := int64(blockInt)
-				if int32(blockInt) <= netInfo.Blocks {
-					blockHash, err := client.GetBlockHash(blockInt64)
-					if err != nil {
-						log.Fatal(err)
-					}
-					log.Printf("Block Height: %v", response)
-					log.Printf("Block Hash: %v", blockHash)
-				} else {
-					log.Printf("Input greater than current height of %v", netInfo.Blocks)
-				}
-			} else if response != "exit" {
-				log.Printf("Input is not a valid block height")
-			}
-		}
-	}
 
 	// For this example gracefully shutdown the client after 10 seconds.
 	// Ordinarily when to shutdown the client is highly application
