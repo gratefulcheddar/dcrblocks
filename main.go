@@ -7,6 +7,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -21,6 +22,17 @@ import (
 func blockHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Hello World\n"))
 	fmt.Fprintf(w, "Input Block Number: %v\n", r.URL.Path[7:])
+	t, err := template.ParseFiles("block.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	type Block struct {
+		Height string
+		Hash   string
+		Size   string
+	}
+	tBlock := Block{"420", "Yes", "Phat"}
+	t.Execute(w, tBlock)
 }
 
 func getBlock(client *dcrrpcclient.Client, blockStr string) *dcrrpcclient.GetBlockVerboseResult {
