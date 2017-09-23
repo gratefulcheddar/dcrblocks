@@ -23,24 +23,31 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 
 	blockInt64, err := strconv.ParseInt(blockStr, 10, 64)
 	if err != nil {
-		log.Fatal(err)
-	}
-	blockHash, err := client.GetBlockHash(blockInt64)
-	if err != nil {
-		log.Fatal(err)
-	}
-	block, err := client.GetBlockVerbose(blockHash, true)
-	if err != nil {
-		log.Fatal(err)
-	}
+		w.Write([]byte("Error: Block height contains invalid character"))
+	} else {
+		maxBlock, err := client.GetBlockCount()
+		if err != nil {
+			log.Fatal(err)
+		}
+		if blockInt64 > maxBlock {
+			w.Write([]byte("Error: Block exceeds current chain height."))
+		} else {
+			blockHash, err := client.GetBlockHash(blockInt64)
+			if err != nil {
+				log.Print(err)
+			}
+			block, err := client.GetBlockVerbose(blockHash, true)
+			if err != nil {
+				log.Fatal(err)
+			}
 
-	t, err := template.ParseFiles("block.html")
-	if err != nil {
-		log.Fatal(err)
+			t, err := template.ParseFiles("block.html")
+			if err != nil {
+				log.Fatal(err)
+			}
+			t.Execute(w, block)
+		}
 	}
-	t.Execute(w, block)
-
-	client.Shutdown()
 }
 
 func makeHandler(fn func(http.ResponseWriter, *http.Request, *dcrrpcclient.Client)) http.HandlerFunc {
@@ -63,7 +70,11 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, *dcrrpcclient.Clien
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		// Pass client to http.HandlerFunc
 		fn(w, r, client)
+
+		client.Shutdown()
 	}
 }
 
