@@ -62,8 +62,8 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, *dcrrpcclient.Clien
 		connCfg := &dcrrpcclient.ConnConfig{
 			Host:         "localhost:9109",
 			Endpoint:     "ws",
-			User:         "timthomas",
-			Pass:         "CfG/BcB1M7q5haQtc6kit34mJycT+bOI",
+			User:         "cheesepool",
+			Pass:         "dcrblocks",
 			Certificates: certs,
 		}
 		client, err := dcrrpcclient.New(connCfg, nil)
