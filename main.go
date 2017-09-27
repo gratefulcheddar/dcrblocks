@@ -41,7 +41,7 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 				log.Fatal(err)
 			}
 
-			t, err := template.ParseFiles("block.html")
+			t, err := template.ParseFiles("templates/block.html")
 			if err != nil {
 				log.Fatal(err)
 			}
