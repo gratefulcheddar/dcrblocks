@@ -79,7 +79,7 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, *dcrrpcclient.Clien
 }
 
 func main() {
-
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	server := http.Server{
 		Addr: "localhost:8080",
 	}
