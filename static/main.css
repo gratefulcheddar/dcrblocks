@@ -1,3 +1,62 @@
-.blockbody {
+/* 
+Decred Branding Colors:
+-----------------------
+Primary:
+    #2971FF - Key Blue
+    #2ED6A1 - Turquiose
+    #0C1E3E - Dark Blue
+Complimentary Colors:
+    #69D3F5 - Light Blue
+    #41BF53 - Green
+    #FD714A - Orange
+Typography:
+    Source Sans Pro
+    Inconsolata
+
+*/
+
+.blockBody {
     color: purple;
+    font-size: 16px;
+}
+
+/* /block/ Table */
+.blockTable {
+    table-layout: fixed;
+    width: 550px;;
+    font-size: 12px;
+    text-align: right;
+    border-collapse: collapse;
+    font-family: "Source Sans Pro";
+}
+.blockTable tbody td, tbody th {
+    border-bottom: 2px solid #FFFFFF;
+    padding: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.blockTable thead td, thead th {
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 18px;
+}
+.blockTable tbody tr:nth-child(odd) {
+    background-color: #69D3F5;
+}
+.blockTable tbody tr:nth-child(odd):hover {
+    background-color: #FD714A;
+}
+.blockTable tbody tr:nth-child(even) {
+    background-color: #41BF53;
+}
+.blockTable tbody tr:nth-child(even):hover {
+    background-color: #FD714A;
+}
+.blockTable thead th:nth-child(1) {
+    width: 25%;
+}
+.blockTable thead th:nth-child(2) {
+    width: 75%;
 }
