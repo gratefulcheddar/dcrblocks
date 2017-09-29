@@ -121,6 +121,10 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 	}
 }
 
+// TODO:
+// parseBlock parses a MsgBlock into a DisplayBlock for use
+// with the block.html templates
+
 // makeHandler creates a new dcrrpcclient, passes it to the
 // input function for executing, shuts down the client,
 // and returns an http.HandlerFunc to use with http.HandleFunc().
