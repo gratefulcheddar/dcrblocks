@@ -24,7 +24,7 @@ Typography:
 .blockTable,
 .transactionTable {
     table-layout: fixed;
-    width: 550px;;
+    width: 95%;
     font-size: 12px;
     text-align: right;
     border-collapse: collapse;
@@ -61,14 +61,27 @@ Typography:
 .transactionTable tbody tr:nth-child(even):hover {
     background-color: #FD714A;
 }
-.blockTable thead th:nth-child(1),
+.blockTable thead th:nth-child(1) {
+    width: 60%;
+}
+.blockTable thead th:nth-child(2) {
+    width: 40%;
+}
 .transactionTable thead th:nth-child(1) {
-    width: 25%;
+    width: 30%;
 }
-.blockTable thead th:nth-child(2),
 .transactionTable thead th:nth-child(2) {
-    width: 75%;
+    width: 70%;
 }
-.transactionTable {
 
+.container {
+    width: 750px;
+}
+.leftColumn {
+    width: 250px;
+    float: left;
+}
+.rightColumn {
+    float: right;
+    width: 500px;
 }

@@ -2,152 +2,140 @@
 <html>
     <head>
         <link rel="stylesheet" href="/static/main.css">
-        <link rel="stylesheet" href="../static/main.css">
         <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
         <title>
             Block #{{ .Height }}
         </title>
     </head>
     <body>
-        <table class="blockTable">
-            <thead>
-                <th class="tableTitle">Versions:</th>
-            </thead>
-            <tbody>
-                <tr>
-                    <th>Block Version:</th>
-                    <td>{{.Version}}</td>
-                </tr>
-                <tr>
-                    <th>Stake Version:</th>
-                    <td>{{.StakeVersion}}</td>
-                </tr>
-            </tbody>
-        </table>
-        <table class="blockTable">
-            <thead>
-                <th class="tableTitle">Summary:</th>
-                <td></td>
-            </thead>
-            <tbody>
-                <tr>
-                    <th>Block Height:</th>
-                    <td>{{.Height}}</td>
-                </tr>
-                <tr>
-                    <th>Confirmations:</th>
-                    <td>{{.Confirmations}}</td>
-                </tr>
-                <tr>
-                    <th>Block Size:</th>
-                    <td>{{.Size}}</td>
-                </tr>
-                <tr>
-                    <th>Timestamp:</th>
-                    <td>{{.Time}}</td>
-                </tr>
-            </tbody>
-        </table>
-        <table class="blockTable">
-            <thead>
-                <th class="tableTitle">Hashes:</th>
-                <td></td>
-            </thead>
-            <tbody>
-                <tr>
-                    <th>Hash:</th>
-                    <td>{{.Hash}}</td>
-                </tr>
-                
-                <tr>
-                    <th>MerkleRoot:</th>
-                    <td>{{.MerkleRoot}}</td>
-                </tr>
-                <tr>
-                    <th>StakeRoot:</th>
-                    <td>{{.StakeRoot}}</td>
-                </tr>
-                <tr>
-                    <th>Nonce:</th>
-                    <td>{{.Nonce}}</td>
-                </tr>
-                <tr>
-                    <th>FinalState:</th>
-                    <td>{{.FinalState}}</td>
-                </tr>
-                <tr>
-                    <th>Bits:</th>
-                    <td>{{.Bits}}</td>
-                </tr>
-                <tr>
-                    <th>Difficulty:</th>
-                    <td>{{.Difficulty}}</td>
-                </tr>
-                <tr>
-                    <th>ExtraData:</th>
-                    <td>{{.ExtraData}}</td>
-                </tr>
-                <tr>
-                    <th>PreviousHash:</th>
-                    <td>{{.PreviousHash}}</td>
-                </tr>
-                <tr>
-                    <th>NextHash:</th>
-                    <td>{{.NextHash}}</td>
-                </tr>
-            </tbody>
-        </table>
-        <table class="blockTable">
-            <thead>
-                <th class="tableTitle">Tickets:</th>
-                <td></td>
-            </thead>
-            <tbody>
-                <tr>
-                    <th>Number of Votes:</th>
-                    <td>{{.Voters}}</td>
-                </tr>
-                <tr>
-                    <th>Ticket Price:</th>
-                    <td>{{.SBits}}</td>
-                </tr>
-                <tr>
-                    <th>Tickets Purchased:</th>
-                    <td>{{.FreshStake}}</td>
-                </tr>
-                <tr>
-                    <th>Tickets Revoked:</th>
-                    <td>{{.Revocations}}</td>
-                </tr>
-                <tr>
-                    <th>Ticket Pool Size:</th>
-                    <td>{{.PoolSize}}</td>
-                </tr>
-                <tr>
-                    <th>VoteBits:</th>
-                    <td>{{.VoteBits}}</td>
-                </tr>
-            </tbody>
-        </table>
-        <table class="transactionTable">
-            <thead>
-                <th class="tableTitle">Transactions:</th>
-                <td></td>
-            </thead>
-            <tbody>
-                <tr>
-                    <th>Transactions:</th>
-                    <td>{{.Tx}}</td>
-                </tr>
-                <tr>
-                    <th>Votes:</th>
-                    <td>{{.STx}}</td>
-                </tr>
-                <tr>
-                    <th>Ticket Purchases:</th>
-                    <td>{{.STx}}</td>
-                </tr>
-            </tbody>
-        </table>
+        <section class="container">
+            <div class="leftColumn">
+                <table class="blockTable">
+                    <thead>
+                        <th class="tableTitle">Versions:</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Block Version:</th>
+                            <td>{{.Version}}</td>
+                        </tr>
+                        <tr>
+                            <th>Vote Version:</th>
+                            <td>{{.StakeVersion}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="blockTable">
+                    <thead>
+                        <th class="tableTitle">Summary:</th>
+                        <td></td>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Block Height:</th>
+                            <td>{{.Height}}</td>
+                        </tr>
+                        <tr>
+                            <th>Confirmations:</th>
+                            <td>{{.Confirmations}}</td>
+                        </tr>
+                        <tr>
+                            <th>Block Size:</th>
+                            <td>{{.Size}} bytes</td>
+                        </tr>
+                        <tr>
+                            <th>Timestamp:</th>
+                            <td>{{.Time}}</td>
+                        </tr>
+                        <tr>
+                            <th>Next Block:</th>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>Previous Block:</th>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="blockTable">
+                    <thead>
+                        <th class="tableTitle">Hashes:</th>
+                        <td></td>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Hash:</th>
+                            <td>{{.Hash}}</td>
+                        </tr>
+
+                        <tr>
+                            <th>MerkleRoot:</th>
+                            <td>{{.MerkleRoot}}</td>
+                        </tr>
+                        <tr>
+                            <th>StakeRoot:</th>
+                            <td>{{.StakeRoot}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="blockTable">
+                    <thead>
+                        <th class="tableTitle">Tickets:</th>
+                        <td></td>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Number of Votes:</th>
+                            <td>{{.Voters}}</td>
+                        </tr>
+                        <tr>
+                            <th>Ticket Price:</th>
+                            <td>{{.SBits}}</td>
+                        </tr>
+                        <tr>
+                            <th>Tickets Purchased:</th>
+                            <td>{{.FreshStake}}</td>
+                        </tr>
+                        <tr>
+                            <th>Tickets Revoked:</th>
+                            <td>{{.Revocations}}</td>
+                        </tr>
+                        <tr>
+                            <th>Ticket Pool Size:</th>
+                            <td>{{.PoolSize}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="rightColumn">
+                <table class="transactionTable">
+                    <thead>
+                        <th class="tableTitle">Transactions:</th>
+                        <td></td>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <table class="transactionTable">
+                    <thead>
+                        <th class="tableTitle">Votes:</th>
+                        <td></td>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <table class="transactionTable">
+                    <thead>
+                        <th class="tableTitle">Ticket Purchases:</th>
+                        <td></td>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </body>
 </html>
