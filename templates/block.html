@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="/static/main.css">
+        <link rel="stylesheet" href="/static/main.css" type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
         <title>
             Block #{{ .Height }}
@@ -111,8 +111,10 @@
                 <table class="transactionTable">
                     <thead>
                         <th class="tableTitle">Transactions:</th>
-                        <td></td>
                     </thead>
+                        {{ range .Tx }}
+                        <tr><td>{{ . }}</td></tr>
+                        {{ end }}
                     <tbody>
 
                     </tbody>
