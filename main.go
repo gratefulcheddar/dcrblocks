@@ -6,7 +6,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -79,7 +78,7 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 			// Get the block of the block hash.
 			// false returns non-empty Tx and STx
 			// true returns non-empty RawTx and RawSTx
-			block, err := client.GetBlockVerbose(blockHash, false)
+			verboseBlock, err := client.GetBlockVerbose(blockHash, false)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -89,12 +88,35 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 			if err != nil {
 				log.Fatal(err)
 			}
+			// Note for STx: Only way to tell them apart is to
+			// check the transaction output types.
+			// stakegen = vote
+			// stakesubmission = ticket purchase
 
-			fmt.Printf("block.Tx = %v\n", block.Tx)
-			fmt.Printf("block.Tx length = %v\n", len(block.Tx))
+			// TODO:
+			// Replace GetBlockVerbose with GetBlock(blockhash *chainhash.Hash) (*wire.MsgBlock, error)
+			// 	type MsgBlock struct {
+			//		Header        BlockHeader
+			//		Transactions  []*MsgTx
+			//		STransactions []*MsgTx
+			//	}
+
+			//	type MsgTx struct {
+			//		CachedHash *chainhash.Hash <-- pass to GetRawTransactionVerbose
+			//		SerType    TxSerializeType
+			//		Version    uint16
+			//		TxIn       []*TxIn
+			//		TxOut      []*TxOut
+			//		LockTime   uint32
+			//		Expiry     uint32
+			//	}
+
+			// func (c *Client) GetRawTransactionVerbose(txHash *chainhash.Hash) (*dcrjson.TxRawResult, error)
+
+			// NEED *dcrjson.TxRawResult.Vout[i].ScriptPubKey.type
 
 			// Load the template with the block data
-			t.Execute(w, block)
+			t.Execute(w, verboseBlock)
 		}
 	}
 }
