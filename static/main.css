@@ -26,9 +26,14 @@ Typography:
     table-layout: fixed;
     width: 95%;
     font-size: 12px;
-    text-align: right;
     border-collapse: collapse;
     font-family: "Source Sans Pro";
+}
+.blockTable {
+    text-align: right;
+}
+.transactionTable {
+    text-align: center;
 }
 .blockTable tbody td, tbody th,
 .transactionTable tbody td, tbody th {
@@ -75,7 +80,7 @@ Typography:
 }
 
 .container {
-    width: 750px;
+    width: 700px;
 }
 .leftColumn {
     width: 250px;
@@ -83,5 +88,5 @@ Typography:
 }
 .rightColumn {
     float: right;
-    width: 500px;
+    width: 450px;
 }
