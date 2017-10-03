@@ -12,40 +12,43 @@ import (
 	"net/http"
 	"path/filepath"
 	"strconv"
+	"time"
 
+	"github.com/decred/dcrd/dcrjson"
 	"github.com/decred/dcrrpcclient"
 	"github.com/decred/dcrutil"
 )
 
-/*type DisplayBlock struct {
+type DisplayBlock struct {
 	// Versions:
 	BlockVersion int32
-	VoteVersion uint32
+	VoteVersion  uint32
 
 	// Summary:
-	BlockHeight int64
-	TransactionCount int64
-	Confirmations int64
-	BlockSize int32
-	Timestamp Time
-	NextBlock int64
-	PreviousBlock int64
+	BlockHeight      int64
+	TransactionCount int
+	Confirmations    int64
+	BlockSize        int32
+	Timestamp        time.Time
+	NextBlock        int64
+	PreviousBlock    int64
 
 	// Hashes:
-	Hash string
+	Hash       string
 	MerkleRoot string
-	StakeRoot string
+	StakeRoot  string
 
 	// Tickets:
-	VotesCast uint16
-	TicketPrice float64
+	VotesCast        uint16
+	TicketPrice      float64
 	TicketsPurchased uint8
-	TicketPoolSize uint32
+	Revocations      uint8
+	TicketPoolSize   uint32
 
-	Transactions []GetTransactionResult
-	Votes []GetTransactionResult
-	TicketPurchases []GetTransactionResult
-}*/
+	Transactions    []*dcrjson.TxRawResult
+	Votes           []*dcrjson.TxRawResult
+	TicketPurchases []*dcrjson.TxRawResult
+}
 
 func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Client) {
 
@@ -75,48 +78,51 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 				log.Print(err)
 			}
 
-			// Get the block of the block hash.
-			// false returns non-empty Tx and STx
-			// true returns non-empty RawTx and RawSTx
-			verboseBlock, err := client.GetBlockVerbose(blockHash, false)
-			if err != nil {
-				log.Fatal(err)
-			}
-
 			// Parse the block.html template
 			t, err := template.ParseFiles("templates/block.html")
 			if err != nil {
 				log.Fatal(err)
 			}
-			// Note for STx: Only way to tell them apart is to
-			// check the transaction output types.
-			// stakegen = vote
-			// stakesubmission = ticket purchase
 
-			// TODO:
-			// Replace GetBlockVerbose with GetBlock(blockhash *chainhash.Hash) (*wire.MsgBlock, error)
-			// 	type MsgBlock struct {
-			//		Header        BlockHeader
-			//		Transactions  []*MsgTx
-			//		STransactions []*MsgTx
-			//	}
+			block, err := client.GetBlockVerbose(blockHash, true)
+			if err != nil {
+				log.Fatal(err)
+			}
 
-			//	type MsgTx struct {
-			//		CachedHash *chainhash.Hash <-- pass to GetRawTransactionVerbose
-			//		SerType    TxSerializeType
-			//		Version    uint16
-			//		TxIn       []*TxIn
-			//		TxOut      []*TxOut
-			//		LockTime   uint32
-			//		Expiry     uint32
-			//	}
+			displayBlock := new(DisplayBlock)
+			displayBlock.BlockHeight = block.Height
+			displayBlock.BlockSize = block.Size
+			displayBlock.BlockVersion = block.Version
+			displayBlock.Confirmations = currentBlockHeight - int64(block.Height)
+			displayBlock.Hash = blockHash.String()
+			displayBlock.MerkleRoot = block.MerkleRoot
+			displayBlock.NextBlock = block.Height + 1
+			displayBlock.PreviousBlock = block.Height - 1
+			displayBlock.Revocations = block.Revocations
+			displayBlock.StakeRoot = block.StakeRoot
+			displayBlock.TicketPoolSize = block.PoolSize
+			displayBlock.TicketPrice = float64(block.SBits) / 100000000.0
+			displayBlock.TicketsPurchased = block.FreshStake
+			displayBlock.Timestamp = time.Unix(block.Time, 0)
+			displayBlock.TransactionCount = len(block.Tx)
+			displayBlock.VotesCast = block.Voters
+			displayBlock.VoteVersion = block.StakeVersion
 
-			// func (c *Client) GetRawTransactionVerbose(txHash *chainhash.Hash) (*dcrjson.TxRawResult, error)
+			for i := 0; i < len(block.RawTx); i++ {
+				displayBlock.Transactions = append(displayBlock.Transactions, &block.RawTx[i])
+			}
 
-			// NEED *dcrjson.TxRawResult.Vout[i].ScriptPubKey.type
+			for i := 0; i < len(block.RawSTx); i++ {
+				if block.RawSTx[i].Vout[0].ScriptPubKey.Type == "stakesubmission" {
+					displayBlock.TicketPurchases = append(displayBlock.TicketPurchases, &block.RawSTx[i])
+				} else {
+					displayBlock.Votes = append(displayBlock.Votes, &block.RawSTx[i])
+				}
+
+			}
 
 			// Load the template with the block data
-			t.Execute(w, verboseBlock)
+			t.Execute(w, displayBlock)
 		}
 	}
 }

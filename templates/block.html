@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="/static/main.css" type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
         <title>
-            Block #{{ .Height }}
+            Block #{{ .BlockHeight }}
         </title>
     </head>
     <body>
@@ -17,11 +17,11 @@
                     <tbody>
                         <tr>
                             <th>Block Version:</th>
-                            <td>{{.Version}}</td>
+                            <td>{{.BlockVersion}}</td>
                         </tr>
                         <tr>
                             <th>Vote Version:</th>
-                            <td>{{.StakeVersion}}</td>
+                            <td>{{.VoteVersion}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -33,11 +33,11 @@
                     <tbody>
                         <tr>
                             <th>Block Height:</th>
-                            <td>{{.Height}}</td>
+                            <td>{{.BlockHeight}}</td>
                         </tr>
                         <tr>
                             <th>Transaction Count:</th>
-                            <td></td>
+                            <td>{{.TransactionCount}}</td>
                         </tr>
                         <tr>
                             <th>Confirmations:</th>
@@ -45,19 +45,19 @@
                         </tr>
                         <tr>
                             <th>Block Size:</th>
-                            <td>{{.Size}} bytes</td>
+                            <td>{{.BlockSize}} bytes</td>
                         </tr>
                         <tr>
                             <th>Timestamp:</th>
-                            <td>{{.Time}}</td>
+                            <td>{{.Timestamp}}</td>
                         </tr>
                         <tr>
                             <th>Next Block:</th>
-                            <td></td>
+                            <td>{{.NextBlock}}</td>
                         </tr>
                         <tr>
                             <th>Previous Block:</th>
-                            <td></td>
+                            <td>{{.PreviousBlock}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -90,15 +90,15 @@
                     <tbody>
                         <tr>
                             <th>Number of Votes:</th>
-                            <td>{{.Voters}}</td>
+                            <td>{{.VotesCast}}</td>
                         </tr>
                         <tr>
                             <th>Ticket Price:</th>
-                            <td>{{.SBits}}</td>
+                            <td>{{.TicketPrice}}</td>
                         </tr>
                         <tr>
                             <th>Tickets Purchased:</th>
-                            <td>{{.FreshStake}}</td>
+                            <td>{{.TicketsPurchased}}</td>
                         </tr>
                         <tr>
                             <th>Tickets Revoked:</th>
@@ -106,7 +106,7 @@
                         </tr>
                         <tr>
                             <th>Ticket Pool Size:</th>
-                            <td>{{.PoolSize}}</td>
+                            <td>{{.TicketPoolSize}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -116,20 +116,20 @@
                     <thead>
                         <th class="tableTitle">Transactions:</th>
                     </thead>
-                        {{ range .Tx }}
-                        <tr><td>{{ . }}</td></tr>
-                        {{ end }}
                     <tbody>
-
+                        {{ range .Transactions }}
+                        <tr><td>{{ .Txid }}</td></tr>
+                        {{ end }}
                     </tbody>
                 </table>
                 <table class="transactionTable">
                     <thead>
                         <th class="tableTitle">Votes:</th>
-                        <td></td>
                     </thead>
                     <tbody>
-
+                        {{ range .Votes }}
+                        <tr><td>{{ .Txid }}</td></tr>
+                        {{ end }}
                     </tbody>
                 </table>
                 <table class="transactionTable">
@@ -138,7 +138,9 @@
                         <td></td>
                     </thead>
                     <tbody>
-                        
+                        {{ range .TicketPurchases }}
+                        <tr><td>{{ .Txid }}</td></tr>
+                        {{ end }}
                     </tbody>
                 </table>
             </div>
