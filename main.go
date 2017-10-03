@@ -93,7 +93,7 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 			displayBlock.BlockHeight = block.Height
 			displayBlock.BlockSize = block.Size
 			displayBlock.BlockVersion = block.Version
-			displayBlock.Confirmations = currentBlockHeight - int64(block.Height)
+			displayBlock.Confirmations = block.Confirmations
 			displayBlock.Hash = block.Hash
 			displayBlock.MerkleRoot = block.MerkleRoot
 			displayBlock.NextBlock = block.Height + 1
