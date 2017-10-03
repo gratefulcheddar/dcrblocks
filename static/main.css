@@ -20,6 +20,12 @@ Typography:
     font-size: 16px;
 }
 
+a:link {
+    color: #0C1E3E;
+}
+a:visited {
+    color: #0C1E3E;
+}
 /* /block/ Table */
 .blockTable,
 .transactionTable {

@@ -53,11 +53,11 @@
                         </tr>
                         <tr>
                             <th>Next Block:</th>
-                            <td>{{.NextBlock}}</td>
+                            <td><a href="{{.NextBlock}}">{{.NextBlock}}</a></td>
                         </tr>
                         <tr>
                             <th>Previous Block:</th>
-                            <td>{{.PreviousBlock}}</td>
+                            <td><a href="{{.PreviousBlock}}">{{.PreviousBlock}}</a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -135,7 +135,6 @@
                 <table class="transactionTable">
                     <thead>
                         <th class="tableTitle">Ticket Purchases:</th>
-                        <td></td>
                     </thead>
                     <tbody>
                         {{ range .TicketPurchases }}

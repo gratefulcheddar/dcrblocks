@@ -101,7 +101,7 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 			displayBlock.Revocations = block.Revocations
 			displayBlock.StakeRoot = block.StakeRoot
 			displayBlock.TicketPoolSize = block.PoolSize
-			displayBlock.TicketPrice = float64(block.SBits) / 100000000.0
+			displayBlock.TicketPrice = block.SBits
 			displayBlock.TicketsPurchased = block.FreshStake
 			displayBlock.Timestamp = time.Unix(block.Time, 0)
 			displayBlock.TransactionCount = len(block.Tx)
