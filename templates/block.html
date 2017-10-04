@@ -2,12 +2,15 @@
 <html>
     <head>
         <link rel="stylesheet" href="/static/main.css" type='text/css'>
-        <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro|Sedgwick+Ave+Display' rel='stylesheet' type='text/css'>
         <title>
             Block #{{ .BlockHeight }}
         </title>
     </head>
     <body>
+        <section class="container">
+            <div class="pageHeader">Decred Block Explorer</div>
+        </section>
         <section class="container">
             <div class="leftColumn">
                 <table class="blockTable">
@@ -118,27 +121,34 @@
                     </thead>
                     <tbody>
                         {{ range .Transactions }}
-                        <tr><td>{{ .Txid }}</td></tr>
+                        <tr>
+                            <td>{{ .TxID }}</td>
+                            <td>{{ .Amount }} DCR</td>
+                        </tr>
                         {{ end }}
                     </tbody>
                 </table>
-                <table class="transactionTable">
+                <table class="voteTable">
                     <thead>
                         <th class="tableTitle">Votes:</th>
+                        <th>{{ .VoteReward }} DCR Reward</th>
                     </thead>
                     <tbody>
                         {{ range .Votes }}
-                        <tr><td>{{ .Txid }}</td></tr>
+                        <tr><td colspan="2">{{ .TxID }}</td></tr>
                         {{ end }}
                     </tbody>
                 </table>
-                <table class="transactionTable">
+                <table class="ticketTable">
                     <thead>
                         <th class="tableTitle">Ticket Purchases:</th>
                     </thead>
                     <tbody>
                         {{ range .TicketPurchases }}
-                        <tr><td>{{ .Txid }}</td></tr>
+                        <tr>
+                            <td>{{ .TxID }}</td>
+                            <td>{{ .Maturity }}</td>
+                        </tr>
                         {{ end }}
                     </tbody>
                 </table>
