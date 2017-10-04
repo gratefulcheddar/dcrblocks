@@ -15,62 +15,61 @@ Typography:
 
 */
 
-.blockBody {
-    color: purple;
-    font-size: 16px;
+body {
+    --decred-key-blue: #2971FF;
+    --decred-turquiose: #2ED6A1;
+    --decred-dark-blue: #0C1E3E;
+    --decred-light-blue: #69D3F5;
+    --decred-green: #41BF53;
+    --decred-orange: #FD714A;
+    background-color: #D3D3D3; 
 }
 
 a:link {
-    color: #0C1E3E;
+    color: var(--decred-dark-blue);
 }
 a:visited {
-    color: #0C1E3E;
+    color: var(--decred-dark-blue);
 }
 /* /block/ Table */
 .blockTable,
-.transactionTable {
+.transactionTable,
+.voteTable,
+.ticketTable {
     table-layout: fixed;
     width: 95%;
     font-size: 12px;
     border-collapse: collapse;
     font-family: "Source Sans Pro";
+    color: var(--decred-dark-blue);
 }
-.blockTable {
+.blockTable,
+.transactionTable,
+.ticketTable {
     text-align: right;
 }
-.transactionTable {
-    text-align: center;
-}
-.blockTable tbody td, tbody th,
-.transactionTable tbody td, tbody th {
+tbody th, 
+tbody td {
     border-bottom: 2px solid #FFFFFF;
     padding: 10px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.blockTable thead td, thead th,
-.transactionTable thead td, thead th {
+thead td, thead th {
     text-align: left;
     text-transform: uppercase;
     letter-spacing: 2px;
     font-size: 18px;
 }
-.blockTable tbody tr:nth-child(odd), 
-.transactionTable tbody tr:nth-child(odd) {
-    background-color: #69D3F5;
+tbody tr:nth-child(odd) {
+    background-color: var(--decred-light-blue);
 }
-.blockTable tbody tr:nth-child(odd):hover,
-.transactionTable tbody tr:nth-child(odd):hover {
-    background-color: #FD714A;
+tbody tr:nth-child(even) {
+    background-color: var(--decred-green);
 }
-.blockTable tbody tr:nth-child(even),
-.transactionTable tbody tr:nth-child(even) {
-    background-color: #41BF53;
-}
-.blockTable tbody tr:nth-child(even):hover,
-.transactionTable tbody tr:nth-child(even):hover {
-    background-color: #FD714A;
+tbody tr:hover {
+    background-color: var(--decred-orange);
 }
 .blockTable thead th:nth-child(1) {
     width: 60%;
@@ -79,14 +78,39 @@ a:visited {
     width: 40%;
 }
 .transactionTable thead th:nth-child(1) {
-    width: 30%;
-}
-.transactionTable thead th:nth-child(2) {
     width: 70%;
 }
-
+.transactionTable thead th:nth-child(2) {
+    width: 30%;
+}
+.voteTable thead th:nth-child(1) {
+    width: 40%;
+}
+.voteTable thead th:nth-child(2) {
+    width: 60%;
+    text-align: right;
+}
+.ticketTable thead th:nth-child(1) {
+    width: 80%;
+}
+.ticketTable thead th:nth-child(2) {
+    width: 20%;
+}
 .container {
     width: 700px;
+}
+.pageHeader {
+    width: 680px;
+    height: 50px;
+    font-size: 50px;
+    background-color: var(--decred-green);
+    color: white;
+    border-bottom: 50px solid var(--decred-key-blue);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: "Source Sans Pro";
+    text-align: center;
+    
 }
 .leftColumn {
     width: 250px;
