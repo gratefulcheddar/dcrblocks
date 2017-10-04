@@ -169,6 +169,73 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 
 					newTransaction := new(VoteTransaction)
 					newTransaction.TxID = block.RawSTx[i].Txid
+					// Parse Vote - TODO: Make this automatic
+					switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[8:10] {
+					case "04":
+						switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[4:6] {
+						case "00":
+							fallthrough
+						case "01":
+							newTransaction.Votes["lnsupport"] = "abstain"
+							newTransaction.Votes["sdiffalgo"] = "abstain"
+						case "02":
+							fallthrough
+						case "03":
+							newTransaction.Votes["lnsupport"] = "abstain"
+							newTransaction.Votes["sdiffalgo"] = "no"
+						case "04":
+							fallthrough
+						case "05":
+							newTransaction.Votes["lnsupport"] = "abstain"
+							newTransaction.Votes["sdiffalgo"] = "yes"
+						case "08":
+							fallthrough
+						case "09":
+							newTransaction.Votes["lnsupport"] = "no"
+							newTransaction.Votes["sdiffalgo"] = "abstain"
+						case "0a":
+							fallthrough
+						case "0b":
+							newTransaction.Votes["lnsupport"] = "no"
+							newTransaction.Votes["sdiffalgo"] = "no"
+						case "0c":
+							fallthrough
+						case "0d":
+							newTransaction.Votes["lnsupport"] = "no"
+							newTransaction.Votes["sdiffalgo"] = "yes"
+						case "10":
+							fallthrough
+						case "11":
+							newTransaction.Votes["lnsupport"] = "yes"
+							newTransaction.Votes["sdiffalgo"] = "abstain"
+						case "12":
+							fallthrough
+						case "13":
+							newTransaction.Votes["lnsupport"] = "yes"
+							newTransaction.Votes["sdiffalgo"] = "no"
+						case "14":
+							fallthrough
+						case "15":
+							newTransaction.Votes["lnsupport"] = "yes"
+							newTransaction.Votes["sdiffalgo"] = "yes"
+						}
+					case "05":
+						switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[4:6] {
+						case "00":
+							fallthrough
+						case "01":
+							newTransaction.Votes["lnfeatures"] = "abstain"
+						case "02":
+							fallthrough
+						case "03":
+							newTransaction.Votes["lnfeatures"] = "no"
+						case "04":
+							fallthrough
+						case "05":
+							newTransaction.Votes["lnfeatures"] = "yes"
+						}
+					}
+
 					displayBlock.Votes = append(displayBlock.Votes, *newTransaction)
 				}
 			}
