@@ -14,7 +14,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/decred/dcrd/dcrjson"
 	"github.com/decred/dcrrpcclient"
 	"github.com/decred/dcrutil"
 )
@@ -44,10 +43,29 @@ type DisplayBlock struct {
 	TicketsPurchased uint8
 	Revocations      uint8
 	TicketPoolSize   uint32
+	VoteReward       float64
 
-	Transactions    []*dcrjson.TxRawResult
-	Votes           []*dcrjson.TxRawResult
-	TicketPurchases []*dcrjson.TxRawResult
+	Transactions    []RegularTransaction
+	Votes           []VoteTransaction
+	TicketPurchases []TicketPurchaseTransaction
+}
+
+type RegularTransaction struct {
+	Amount        float64
+	TxID          string
+	Confirmations int64
+}
+
+type VoteTransaction struct {
+	Votes         map[string]string
+	TxID          string
+	Confirmations int64
+}
+
+type TicketPurchaseTransaction struct {
+	TxID          string
+	Confirmations int64
+	Maturity      string
 }
 
 func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Client) {
@@ -89,6 +107,13 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 				log.Fatal(err)
 			}
 
+			blockSubsidy, err := client.GetBlockSubsidy(block.Height, block.Voters)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			// Main purpose of creating a new struct is to allow the filtering of
+			// transactions by type. This can be moved to a separate function...
 			displayBlock := new(DisplayBlock)
 			displayBlock.BlockHeight = block.Height
 			displayBlock.BlockSize = block.Size
@@ -106,19 +131,46 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 			displayBlock.Timestamp = time.Unix(block.Time, 0)
 			displayBlock.TransactionCount = len(block.Tx)
 			displayBlock.VotesCast = block.Voters
+			displayBlock.VoteReward = (float64(blockSubsidy.PoS) / 100000000) / float64(block.Voters)
 			displayBlock.VoteVersion = block.StakeVersion
 
+			// Loop through the Raw Transactions, creating a slice of
+			// RegularTransactions with the minimum information
+			// required to display to user.
 			for i := 0; i < len(block.RawTx); i++ {
-				displayBlock.Transactions = append(displayBlock.Transactions, &block.RawTx[i])
+				newTransaction := new(RegularTransaction)
+				newTransaction.TxID = block.RawTx[i].Txid
+				newTransaction.Confirmations = block.RawTx[i].Confirmations
+				for _, value := range block.RawTx[i].Vout {
+					newTransaction.Amount += value.Value
+				}
+				newTransaction.Amount = float64(int(newTransaction.Amount*100000000)) / 100000000
+				displayBlock.Transactions = append(displayBlock.Transactions, *newTransaction)
 			}
 
+			// Loop through the Raw Stake Transactions, creating two
+			// slices, one of TicketPurchaseTransactions and one of
+			// VoteTransactions, with the minimum information required
+			// to display to user.
 			for i := 0; i < len(block.RawSTx); i++ {
 				if block.RawSTx[i].Vout[0].ScriptPubKey.Type == "stakesubmission" {
-					displayBlock.TicketPurchases = append(displayBlock.TicketPurchases, &block.RawSTx[i])
-				} else {
-					displayBlock.Votes = append(displayBlock.Votes, &block.RawSTx[i])
-				}
+					newTransaction := new(TicketPurchaseTransaction)
+					newTransaction.TxID = block.RawSTx[i].Txid
 
+					if block.RawSTx[i].Confirmations > 256 {
+						newTransaction.Maturity = "Mature"
+					} else {
+						newTransaction.Maturity = "Immature"
+					}
+
+					displayBlock.TicketPurchases = append(displayBlock.TicketPurchases, *newTransaction)
+
+				} else {
+
+					newTransaction := new(VoteTransaction)
+					newTransaction.TxID = block.RawSTx[i].Txid
+					displayBlock.Votes = append(displayBlock.Votes, *newTransaction)
+				}
 			}
 
 			// Load the template with the block data
