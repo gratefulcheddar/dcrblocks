@@ -25,10 +25,10 @@ body {
     background-color: #D3D3D3; 
 }
 
-a:link {
+table a:link {
     color: var(--decred-dark-blue);
 }
-a:visited {
+table a:visited {
     color: var(--decred-dark-blue);
 }
 /* /block/ Table */
@@ -100,17 +100,22 @@ tbody tr:hover {
     width: 700px;
 }
 .pageHeader {
-    width: 680px;
+    width: 670px;
     height: 50px;
-    font-size: 50px;
-    background-color: var(--decred-green);
-    color: white;
-    border-bottom: 50px solid var(--decred-key-blue);
     font-weight: 700;
-    text-transform: uppercase;
     font-family: "Source Sans Pro";
-    text-align: center;
-    
+    text-align: right;
+    padding-bottom: 15px;
+}
+.pageTitle {
+    color: var(--decred-green);
+    font-size: 50px;
+    text-decoration: none;
+}
+.subTitle {
+    font-size: 25px;
+    margin-top: -15px;
+    color: var(--decred-light-blue);
 }
 .leftColumn {
     width: 250px;
