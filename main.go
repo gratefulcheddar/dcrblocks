@@ -60,6 +60,7 @@ type VoteTransaction struct {
 	Votes         map[string]string
 	TxID          string
 	Confirmations int64
+	Version       string
 }
 
 type TicketPurchaseTransaction struct {
@@ -169,9 +170,11 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 
 					newTransaction := new(VoteTransaction)
 					newTransaction.TxID = block.RawSTx[i].Txid
+					newTransaction.Votes = make(map[string]string)
 					// Parse Vote - TODO: Make this automatic
 					switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[8:10] {
 					case "04":
+						newTransaction.Version = "4"
 						switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[4:6] {
 						case "00":
 							fallthrough
@@ -220,6 +223,7 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 							newTransaction.Votes["sdiffalgo"] = "yes"
 						}
 					case "05":
+						newTransaction.Version = "5"
 						switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[4:6] {
 						case "00":
 							fallthrough
