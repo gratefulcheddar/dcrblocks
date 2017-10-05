@@ -108,7 +108,7 @@
                         </tr>
                         <tr>
                             <th>Tickets Revoked:</th>
-                            <td>{{.Revocations}}</td>
+                            <td>{{.RevocationCount}}</td>
                         </tr>
                         <tr>
                             <th>Ticket Pool Size:</th>
@@ -118,6 +118,7 @@
                 </table>
             </div>
             <div class="rightColumn">
+                {{ if .Transactions }}
                 <table class="transactionTable">
                     <thead>
                         <th class="tableTitle">Transactions:</th>
@@ -131,6 +132,8 @@
                         {{ end }}
                     </tbody>
                 </table>
+                {{ end }}
+                {{ if .Votes }}
                 <table class="voteTable">
                     <thead>
                         <th class="tableTitle">Votes:</th>
@@ -152,6 +155,8 @@
                         {{ end }}
                     </tbody>
                 </table>
+                {{ end }}
+                {{ if .TicketPurchases }}
                 <table class="ticketTable">
                     <thead>
                         <th class="tableTitle">Ticket Purchases:</th>
@@ -165,6 +170,21 @@
                         {{ end }}
                     </tbody>
                 </table>
+                {{ end }}
+                {{ if .Revocations }}
+                <table class="ticketTable">
+                        <thead>
+                            <th class="tableTitle">Ticket Revocations:</th>
+                        </thead>
+                        <tbody>
+                            {{ range .Revocations }}
+                            <tr>
+                                <td>{{ .TxID }}</td>
+                            </tr>
+                            {{ end }}
+                        </tbody>
+                    </table>
+                {{ end }}
             </div>
         </section>
     </body>
