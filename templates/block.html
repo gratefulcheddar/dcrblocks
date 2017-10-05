@@ -142,10 +142,12 @@
                     <tbody>
                         {{ range .Votes }}
                         <tr><td colspan="2">{{ .TxID }}</td></tr>
+                        {{ if .Version }}
                         <tr>
                             <td>Version:</td>
                             <td>{{ .Version }}</td>
                         </tr>
+                        {{ end }}
                         {{ range $key, $value := .Votes }}
                         <tr>
                             <td>{{ $key }}:</td>
