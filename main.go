@@ -244,8 +244,6 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 								vote.Votes["lnfeatures"] = "yes"
 							}
 						}
-					} else {
-						vote.Version = "0"
 					}
 					displayBlock.Votes = append(displayBlock.Votes, *vote)
 				}
