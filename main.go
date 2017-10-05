@@ -41,32 +41,34 @@ type DisplayBlock struct {
 	VotesCast        uint16
 	TicketPrice      float64
 	TicketsPurchased uint8
-	Revocations      uint8
+	RevocationCount  uint8
 	TicketPoolSize   uint32
 	VoteReward       float64
 
 	Transactions    []RegularTransaction
 	Votes           []VoteTransaction
 	TicketPurchases []TicketPurchaseTransaction
+	Revocations     []RevocationTransaction
 }
 
 type RegularTransaction struct {
-	Amount        float64
-	TxID          string
-	Confirmations int64
+	Amount float64
+	TxID   string
 }
 
 type VoteTransaction struct {
-	Votes         map[string]string
-	TxID          string
-	Confirmations int64
-	Version       string
+	Votes   map[string]string
+	TxID    string
+	Version string
 }
 
 type TicketPurchaseTransaction struct {
-	TxID          string
-	Confirmations int64
-	Maturity      string
+	TxID     string
+	Maturity string
+}
+
+type RevocationTransaction struct {
+	TxID string
 }
 
 func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Client) {
@@ -124,7 +126,7 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 			displayBlock.MerkleRoot = block.MerkleRoot
 			displayBlock.NextBlock = block.Height + 1
 			displayBlock.PreviousBlock = block.Height - 1
-			displayBlock.Revocations = block.Revocations
+			displayBlock.RevocationCount = block.Revocations
 			displayBlock.StakeRoot = block.StakeRoot
 			displayBlock.TicketPoolSize = block.PoolSize
 			displayBlock.TicketPrice = block.SBits
@@ -141,7 +143,6 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 			for i := 0; i < len(block.RawTx); i++ {
 				newTransaction := new(RegularTransaction)
 				newTransaction.TxID = block.RawTx[i].Txid
-				newTransaction.Confirmations = block.RawTx[i].Confirmations
 				for _, value := range block.RawTx[i].Vout {
 					newTransaction.Amount += value.Value
 				}
@@ -155,92 +156,95 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 			// to display to user.
 			for i := 0; i < len(block.RawSTx); i++ {
 				if block.RawSTx[i].Vout[0].ScriptPubKey.Type == "stakesubmission" {
-					newTransaction := new(TicketPurchaseTransaction)
-					newTransaction.TxID = block.RawSTx[i].Txid
+					ticketPurchase := new(TicketPurchaseTransaction)
+					ticketPurchase.TxID = block.RawSTx[i].Txid
 
 					if block.RawSTx[i].Confirmations > 256 {
-						newTransaction.Maturity = "Mature"
+						ticketPurchase.Maturity = "Mature"
 					} else {
-						newTransaction.Maturity = "Immature"
+						ticketPurchase.Maturity = "Immature"
 					}
 
-					displayBlock.TicketPurchases = append(displayBlock.TicketPurchases, *newTransaction)
+					displayBlock.TicketPurchases = append(displayBlock.TicketPurchases, *ticketPurchase)
 
+				} else if block.RawSTx[i].Vout[0].ScriptPubKey.Type == "stakerevoke" {
+					revocation := new(RevocationTransaction)
+					revocation.TxID = block.RawSTx[i].Txid
+					displayBlock.Revocations = append(displayBlock.Revocations, *revocation)
 				} else {
-
-					newTransaction := new(VoteTransaction)
-					newTransaction.TxID = block.RawSTx[i].Txid
-					newTransaction.Votes = make(map[string]string)
+					vote := new(VoteTransaction)
+					vote.TxID = block.RawSTx[i].Txid
+					vote.Votes = make(map[string]string)
 					// Parse Vote - TODO: Make this automatic
 					switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[8:10] {
 					case "04":
-						newTransaction.Version = "4"
+						vote.Version = "4"
 						switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[4:6] {
 						case "00":
 							fallthrough
 						case "01":
-							newTransaction.Votes["lnsupport"] = "abstain"
-							newTransaction.Votes["sdiffalgo"] = "abstain"
+							vote.Votes["lnsupport"] = "abstain"
+							vote.Votes["sdiffalgo"] = "abstain"
 						case "02":
 							fallthrough
 						case "03":
-							newTransaction.Votes["lnsupport"] = "abstain"
-							newTransaction.Votes["sdiffalgo"] = "no"
+							vote.Votes["lnsupport"] = "abstain"
+							vote.Votes["sdiffalgo"] = "no"
 						case "04":
 							fallthrough
 						case "05":
-							newTransaction.Votes["lnsupport"] = "abstain"
-							newTransaction.Votes["sdiffalgo"] = "yes"
+							vote.Votes["lnsupport"] = "abstain"
+							vote.Votes["sdiffalgo"] = "yes"
 						case "08":
 							fallthrough
 						case "09":
-							newTransaction.Votes["lnsupport"] = "no"
-							newTransaction.Votes["sdiffalgo"] = "abstain"
+							vote.Votes["lnsupport"] = "no"
+							vote.Votes["sdiffalgo"] = "abstain"
 						case "0a":
 							fallthrough
 						case "0b":
-							newTransaction.Votes["lnsupport"] = "no"
-							newTransaction.Votes["sdiffalgo"] = "no"
+							vote.Votes["lnsupport"] = "no"
+							vote.Votes["sdiffalgo"] = "no"
 						case "0c":
 							fallthrough
 						case "0d":
-							newTransaction.Votes["lnsupport"] = "no"
-							newTransaction.Votes["sdiffalgo"] = "yes"
+							vote.Votes["lnsupport"] = "no"
+							vote.Votes["sdiffalgo"] = "yes"
 						case "10":
 							fallthrough
 						case "11":
-							newTransaction.Votes["lnsupport"] = "yes"
-							newTransaction.Votes["sdiffalgo"] = "abstain"
+							vote.Votes["lnsupport"] = "yes"
+							vote.Votes["sdiffalgo"] = "abstain"
 						case "12":
 							fallthrough
 						case "13":
-							newTransaction.Votes["lnsupport"] = "yes"
-							newTransaction.Votes["sdiffalgo"] = "no"
+							vote.Votes["lnsupport"] = "yes"
+							vote.Votes["sdiffalgo"] = "no"
 						case "14":
 							fallthrough
 						case "15":
-							newTransaction.Votes["lnsupport"] = "yes"
-							newTransaction.Votes["sdiffalgo"] = "yes"
+							vote.Votes["lnsupport"] = "yes"
+							vote.Votes["sdiffalgo"] = "yes"
 						}
 					case "05":
-						newTransaction.Version = "5"
+						vote.Version = "5"
 						switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[4:6] {
 						case "00":
 							fallthrough
 						case "01":
-							newTransaction.Votes["lnfeatures"] = "abstain"
+							vote.Votes["lnfeatures"] = "abstain"
 						case "02":
 							fallthrough
 						case "03":
-							newTransaction.Votes["lnfeatures"] = "no"
+							vote.Votes["lnfeatures"] = "no"
 						case "04":
 							fallthrough
 						case "05":
-							newTransaction.Votes["lnfeatures"] = "yes"
+							vote.Votes["lnfeatures"] = "yes"
 						}
 					}
 
-					displayBlock.Votes = append(displayBlock.Votes, *newTransaction)
+					displayBlock.Votes = append(displayBlock.Votes, *vote)
 				}
 			}
 
