@@ -176,74 +176,77 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 					vote.TxID = block.RawSTx[i].Txid
 					vote.Votes = make(map[string]string)
 					// Parse Vote - TODO: Make this automatic
-					switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[8:10] {
-					case "04":
-						vote.Version = "4"
-						switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[4:6] {
-						case "00":
-							fallthrough
-						case "01":
-							vote.Votes["lnsupport"] = "abstain"
-							vote.Votes["sdiffalgo"] = "abstain"
-						case "02":
-							fallthrough
-						case "03":
-							vote.Votes["lnsupport"] = "abstain"
-							vote.Votes["sdiffalgo"] = "no"
+					if len(block.RawSTx[i].Vout[1].ScriptPubKey.Hex) > 8 {
+						switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[8:10] {
 						case "04":
-							fallthrough
+							vote.Version = "4"
+							switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[4:6] {
+							case "00":
+								fallthrough
+							case "01":
+								vote.Votes["lnsupport"] = "abstain"
+								vote.Votes["sdiffalgo"] = "abstain"
+							case "02":
+								fallthrough
+							case "03":
+								vote.Votes["lnsupport"] = "abstain"
+								vote.Votes["sdiffalgo"] = "no"
+							case "04":
+								fallthrough
+							case "05":
+								vote.Votes["lnsupport"] = "abstain"
+								vote.Votes["sdiffalgo"] = "yes"
+							case "08":
+								fallthrough
+							case "09":
+								vote.Votes["lnsupport"] = "no"
+								vote.Votes["sdiffalgo"] = "abstain"
+							case "0a":
+								fallthrough
+							case "0b":
+								vote.Votes["lnsupport"] = "no"
+								vote.Votes["sdiffalgo"] = "no"
+							case "0c":
+								fallthrough
+							case "0d":
+								vote.Votes["lnsupport"] = "no"
+								vote.Votes["sdiffalgo"] = "yes"
+							case "10":
+								fallthrough
+							case "11":
+								vote.Votes["lnsupport"] = "yes"
+								vote.Votes["sdiffalgo"] = "abstain"
+							case "12":
+								fallthrough
+							case "13":
+								vote.Votes["lnsupport"] = "yes"
+								vote.Votes["sdiffalgo"] = "no"
+							case "14":
+								fallthrough
+							case "15":
+								vote.Votes["lnsupport"] = "yes"
+								vote.Votes["sdiffalgo"] = "yes"
+							}
 						case "05":
-							vote.Votes["lnsupport"] = "abstain"
-							vote.Votes["sdiffalgo"] = "yes"
-						case "08":
-							fallthrough
-						case "09":
-							vote.Votes["lnsupport"] = "no"
-							vote.Votes["sdiffalgo"] = "abstain"
-						case "0a":
-							fallthrough
-						case "0b":
-							vote.Votes["lnsupport"] = "no"
-							vote.Votes["sdiffalgo"] = "no"
-						case "0c":
-							fallthrough
-						case "0d":
-							vote.Votes["lnsupport"] = "no"
-							vote.Votes["sdiffalgo"] = "yes"
-						case "10":
-							fallthrough
-						case "11":
-							vote.Votes["lnsupport"] = "yes"
-							vote.Votes["sdiffalgo"] = "abstain"
-						case "12":
-							fallthrough
-						case "13":
-							vote.Votes["lnsupport"] = "yes"
-							vote.Votes["sdiffalgo"] = "no"
-						case "14":
-							fallthrough
-						case "15":
-							vote.Votes["lnsupport"] = "yes"
-							vote.Votes["sdiffalgo"] = "yes"
+							vote.Version = "5"
+							switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[4:6] {
+							case "00":
+								fallthrough
+							case "01":
+								vote.Votes["lnfeatures"] = "abstain"
+							case "02":
+								fallthrough
+							case "03":
+								vote.Votes["lnfeatures"] = "no"
+							case "04":
+								fallthrough
+							case "05":
+								vote.Votes["lnfeatures"] = "yes"
+							}
 						}
-					case "05":
-						vote.Version = "5"
-						switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[4:6] {
-						case "00":
-							fallthrough
-						case "01":
-							vote.Votes["lnfeatures"] = "abstain"
-						case "02":
-							fallthrough
-						case "03":
-							vote.Votes["lnfeatures"] = "no"
-						case "04":
-							fallthrough
-						case "05":
-							vote.Votes["lnfeatures"] = "yes"
-						}
+					} else {
+						vote.Version = "0"
 					}
-
 					displayBlock.Votes = append(displayBlock.Votes, *vote)
 				}
 			}
