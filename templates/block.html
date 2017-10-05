@@ -139,6 +139,16 @@
                     <tbody>
                         {{ range .Votes }}
                         <tr><td colspan="2">{{ .TxID }}</td></tr>
+                        <tr>
+                            <td>Version:</td>
+                            <td>{{ .Version }}</td>
+                        </tr>
+                        {{ range $key, $value := .Votes }}
+                        <tr>
+                            <td>{{ $key }}:</td>
+                            <td>{{ $value }}</td>
+                        </tr>
+                        {{ end }}
                         {{ end }}
                     </tbody>
                 </table>
