@@ -134,7 +134,7 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 			displayBlock.TicketPrice = block.SBits
 			displayBlock.TicketsPurchased = block.FreshStake
 			displayBlock.Timestamp = time.Unix(block.Time, 0)
-			displayBlock.TransactionCount = len(block.Tx)
+			displayBlock.TransactionCount = len(block.RawTx)
 			displayBlock.VotesCast = block.Voters
 			displayBlock.VoteReward = (float64(blockSubsidy.PoS) / 100000000) / float64(block.Voters)
 			displayBlock.VoteVersion = block.StakeVersion
