@@ -57,14 +57,18 @@
                             <th>Timestamp:</th>
                             <td>{{.Timestamp}}</td>
                         </tr>
+                        {{ if .NextBlock }}
                         <tr>
                             <th>Next Block:</th>
                             <td><a href="{{.NextBlock}}">{{.NextBlock}}</a></td>
                         </tr>
+                        {{ end }}
+                        {{ if .BlockHeight }}
                         <tr>
                             <th>Previous Block:</th>
                             <td><a href="{{.PreviousBlock}}">{{.PreviousBlock}}</a></td>
                         </tr>
+                        {{ end }}
                     </tbody>
                 </table>
                 <table class="blockTable">
@@ -127,7 +131,7 @@
                         {{ range .Transactions }}
                         <tr>
                             <td>{{ .TxID }}</td>
-                            <td>{{ .Amount }} DCR</td>
+                            <td>{{ printf "%9.8f" .Amount }} DCR</td>
                         </tr>
                         {{ end }}
                     </tbody>
@@ -150,11 +154,6 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="voteRow">
-                                            {{ range $key, $value := .Votes }}
-                                            <span class="voteButton">
-                                                {{ $key }}: {{ $value }}
-                                            </span>
-                                            {{ end }}
                                             {{ range $key, $value := .Votes }}
                                             <span class="voteButton">
                                                 {{ $key }}: {{ $value }}
