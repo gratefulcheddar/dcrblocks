@@ -32,6 +32,11 @@ table a:link {
 table a:visited {
     color: var(--decred-dark-blue);
 }
+table a:hover {
+    color: white;
+    font-weight: 700;
+    text-decoration: none;
+}
 /* /block/ Table */
 .blockTable,
 .transactionTable,
