@@ -124,7 +124,9 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 			displayBlock.Confirmations = block.Confirmations
 			displayBlock.Hash = block.Hash
 			displayBlock.MerkleRoot = block.MerkleRoot
-			displayBlock.NextBlock = block.Height + 1
+			if displayBlock.BlockHeight != currentBlockHeight {
+				displayBlock.NextBlock = block.Height + 1
+			}
 			displayBlock.PreviousBlock = block.Height - 1
 			displayBlock.RevocationCount = block.Revocations
 			displayBlock.StakeRoot = block.StakeRoot
@@ -143,10 +145,12 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 			for i := 0; i < len(block.RawTx); i++ {
 				newTransaction := new(RegularTransaction)
 				newTransaction.TxID = block.RawTx[i].Txid
-				for _, value := range block.RawTx[i].Vout {
-					newTransaction.Amount += value.Value
+				for _, value := range block.RawTx[i].Vin {
+					newTransaction.Amount += value.AmountIn
 				}
-				newTransaction.Amount = float64(int(newTransaction.Amount*100000000)) / 100000000
+				if block.Height == 0 {
+					newTransaction.Amount = 0
+				}
 				displayBlock.Transactions = append(displayBlock.Transactions, *newTransaction)
 			}
 
@@ -261,7 +265,7 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 
 // makeHandler creates a new dcrrpcclient, passes it to the
 // input function for executing, shuts down the client,
-// and returns an http.HandlerFunc to use with http.HandleFunc().
+// and returns an http.HandlerFunc to use with http.HandleFunc()
 func makeHandler(fn func(http.ResponseWriter, *http.Request, *dcrrpcclient.Client)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
