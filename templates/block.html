@@ -137,23 +137,34 @@
                 <table class="voteTable">
                     <thead>
                         <th class="tableTitle">Votes:</th>
-                        <th>{{ .VoteReward }} DCR Reward</th>
+                        <th class="tableTitle">{{ .VoteReward }} DCR Reward</th>
                     </thead>
                     <tbody>
                         {{ range .Votes }}
-                        <tr><td colspan="2">{{ .TxID }}</td></tr>
-                        {{ if .Version }}
-                        <tr>
-                            <td>Version:</td>
-                            <td>{{ .Version }}</td>
-                        </tr>
-                        {{ end }}
-                        {{ range $key, $value := .Votes }}
-                        <tr>
-                            <td>{{ $key }}:</td>
-                            <td>{{ $value }}</td>
-                        </tr>
-                        {{ end }}
+                        <tr><td colspan="2">
+                            <table class="voteDetailTable">
+                                <tbody>
+                                    <tr>
+                                        <td>{{ .TxID }}</td>
+                                        <td>Version: {{ .Version }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="voteRow">
+                                            {{ range $key, $value := .Votes }}
+                                            <span class="voteButton">
+                                                {{ $key }}: {{ $value }}
+                                            </span>
+                                            {{ end }}
+                                            {{ range $key, $value := .Votes }}
+                                            <span class="voteButton">
+                                                {{ $key }}: {{ $value }}
+                                            </span>
+                                            {{ end }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td></tr>
                         {{ end }}
                     </tbody>
                 </table>
@@ -174,7 +185,7 @@
                 </table>
                 {{ end }}
                 {{ if .Revocations }}
-                <table class="ticketTable">
+                <table class="revocationTable">
                         <thead>
                             <th class="tableTitle">Ticket Revocations:</th>
                         </thead>
