@@ -22,7 +22,8 @@ body {
     --decred-light-blue: #69D3F5;
     --decred-green: #41BF53;
     --decred-orange: #FD714A;
-    background-color: #D3D3D3; 
+    --background-color: #D3D3D3;
+    background-color: var(--background-color) 
 }
 
 table a:link {
@@ -45,11 +46,9 @@ table a:visited {
     font-family: "Source Sans Pro";
     color: var(--decred-dark-blue);
 }
-.blockTable,
-.transactionTable,
-.ticketTable,
-.voteTable {
-    text-align: right;
+
+.blockTable tbody th {
+    text-align: left;
 }
 .blockTable tbody th,
 .blockTable tbody td,
@@ -72,11 +71,11 @@ table a:visited {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.voteTable tbody tr {
+.voteTable > tbody > tr {
     border-bottom: 2px solid #FFFFFF;
 }
 .voteDetailTable tbody td {
-    padding: 10px;
+    padding: 10px 10px 0px 10px;
 }
 .voteDetailTable {
     width: 100%;
@@ -89,14 +88,14 @@ table a:visited {
 }
 .blockTable tbody tr:nth-child(odd),
 .transactionTable tbody tr:nth-child(odd),
-.voteTable tbody tr:nth-child(odd),
+.voteTable > tbody > tr:nth-child(odd),
 .ticketTable tbody tr:nth-child(odd),
 .revocationTable tbody tr:nth-child(odd) {
     background-color: var(--decred-light-blue);
 }
 .blockTable tbody tr:nth-child(even),
 .transactionTable tbody tr:nth-child(even),
-.voteTable tbody tr:nth-child(even),
+.voteTable > tbody > tr:nth-child(even),
 .ticketTable tbody tr:nth-child(even),
 .revocationTable tbody tr:nth-child(even) {
     background-color: var(--decred-green);
@@ -135,6 +134,12 @@ table a:visited {
 .voteDetailTable tbody td:nth-child(2) {
     width: 20%;
 }
+tbody td:nth-child(1) {
+    text-align: left;
+}
+tbody td:nth-child(2) {
+    text-align: right;
+}
 .container {
     width: 700px;
 }
@@ -165,14 +170,16 @@ table a:visited {
     width: 450px;
 }
 .voteButton {
-    background-color: #D3D3D3;
+    background-color: var(--background-color);
     padding: 3px 7px 3px 7px;
     border-radius: 150px;
-    margin-left: 4px;
-    border: 1px solid black;
+    margin-right: 4px;
+    border: 1.5px solid var(--decred-dark-blue);
     text-transform: uppercase;
+    font-size: 10px;
 }
 .voteDetailTable tbody tr td.voteRow {
+    padding-bottom: 13px;
     overflow: scroll;
     text-overflow: clip;
 }
