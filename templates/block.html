@@ -42,11 +42,11 @@
                             <td>{{.BlockHeight}}</td>
                         </tr>
                         <tr>
-                            <th>Transaction Count:</th>
+                            <th>Transactions:</th>
                             <td>{{.TransactionCount}}</td>
                         </tr>
                         <tr>
-                            <th>Confirmations:</th>
+                            <th>Confirms:</th>
                             <td>{{.Confirmations}}</td>
                         </tr>
                         <tr>
@@ -59,13 +59,13 @@
                         </tr>
                         {{ if .NextBlock }}
                         <tr>
-                            <th>Next Block:</th>
+                            <th>Next:</th>
                             <td><a href="{{.NextBlock}}">{{.NextBlock}}</a></td>
                         </tr>
                         {{ end }}
                         {{ if .BlockHeight }}
                         <tr>
-                            <th>Previous Block:</th>
+                            <th>Previous:</th>
                             <td><a href="{{.PreviousBlock}}">{{.PreviousBlock}}</a></td>
                         </tr>
                         {{ end }}
@@ -99,24 +99,24 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <th>Number of Votes:</th>
-                            <td>{{.VotesCast}}</td>
-                        </tr>
-                        <tr>
-                            <th>Ticket Price:</th>
+                            <th>Price:</th>
                             <td>{{.TicketPrice}}</td>
                         </tr>
                         <tr>
-                            <th>Tickets Purchased:</th>
+                            <th>Purchases:</th>
                             <td>{{.TicketsPurchased}}</td>
                         </tr>
                         <tr>
-                            <th>Tickets Revoked:</th>
+                            <th>Revocations:</th>
                             <td>{{.RevocationCount}}</td>
                         </tr>
                         <tr>
-                            <th>Ticket Pool Size:</th>
+                            <th>Pool Size:</th>
                             <td>{{.TicketPoolSize}}</td>
+                        </tr>
+                        <tr>
+                            <th>Votes:</th>
+                            <td>{{.VotesCast}}</td>
                         </tr>
                     </tbody>
                 </table>
