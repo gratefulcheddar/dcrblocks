@@ -11,7 +11,7 @@ import (
 	"github.com/decred/dcrrpcclient"
 )
 
-type DisplayBlock struct {
+type displayBlock struct {
 	// Versions:
 	BlockVersion int32
 	VoteVersion  uint32
@@ -38,29 +38,29 @@ type DisplayBlock struct {
 	TicketPoolSize   uint32
 	VoteReward       float64
 
-	Transactions    []RegularTransaction
-	Votes           []VoteTransaction
-	TicketPurchases []TicketPurchaseTransaction
-	Revocations     []RevocationTransaction
+	Transactions    []regularTransaction
+	Votes           []voteTransaction
+	TicketPurchases []ticketPurchaseTransaction
+	Revocations     []revocationTransaction
 }
 
-type RegularTransaction struct {
+type regularTransaction struct {
 	Amount float64
 	TxID   string
 }
 
-type VoteTransaction struct {
+type voteTransaction struct {
 	Votes   map[string]string
 	TxID    string
 	Version string
 }
 
-type TicketPurchaseTransaction struct {
+type ticketPurchaseTransaction struct {
 	TxID     string
 	Maturity string
 }
 
-type RevocationTransaction struct {
+type revocationTransaction struct {
 	TxID string
 }
 
@@ -116,11 +116,11 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 	}
 }
 
-// parseBlock parses a GetBlockVerboseResult into a DisplayBlock for use
+// parseBlock parses a GetBlockVerboseResult into a displayBlock for use
 // with the block.html templates
-func parseBlock(block *dcrjson.GetBlockVerboseResult, blockSubsidy *dcrjson.GetBlockSubsidyResult, maxHeight int64) *DisplayBlock {
+func parseBlock(block *dcrjson.GetBlockVerboseResult, blockSubsidy *dcrjson.GetBlockSubsidyResult, maxHeight int64) *displayBlock {
 
-	displayBlock := new(DisplayBlock)
+	displayBlock := new(displayBlock)
 	displayBlock.BlockHeight = block.Height
 	displayBlock.BlockSize = block.Size
 	displayBlock.BlockVersion = block.Version
@@ -143,10 +143,10 @@ func parseBlock(block *dcrjson.GetBlockVerboseResult, blockSubsidy *dcrjson.GetB
 	displayBlock.VoteVersion = block.StakeVersion
 
 	// Loop through the Raw Transactions, creating a slice of
-	// RegularTransactions with the minimum information
+	// regularTransactions with the minimum information
 	// required to display to user.
 	for i := 0; i < len(block.RawTx); i++ {
-		newTransaction := new(RegularTransaction)
+		newTransaction := new(regularTransaction)
 		newTransaction.TxID = block.RawTx[i].Txid
 		for _, value := range block.RawTx[i].Vin {
 			newTransaction.Amount += value.AmountIn
@@ -158,12 +158,12 @@ func parseBlock(block *dcrjson.GetBlockVerboseResult, blockSubsidy *dcrjson.GetB
 	}
 
 	// Loop through the Raw Stake Transactions, creating two
-	// slices, one of TicketPurchaseTransactions and one of
-	// VoteTransactions, with the minimum information required
+	// slices, one of ticketPurchaseTransactions and one of
+	// voteTransactions, with the minimum information required
 	// to display to user.
 	for i := 0; i < len(block.RawSTx); i++ {
 		if block.RawSTx[i].Vout[0].ScriptPubKey.Type == "stakesubmission" {
-			ticketPurchase := new(TicketPurchaseTransaction)
+			ticketPurchase := new(ticketPurchaseTransaction)
 			ticketPurchase.TxID = block.RawSTx[i].Txid
 
 			if block.RawSTx[i].Confirmations > 256 {
@@ -175,11 +175,11 @@ func parseBlock(block *dcrjson.GetBlockVerboseResult, blockSubsidy *dcrjson.GetB
 			displayBlock.TicketPurchases = append(displayBlock.TicketPurchases, *ticketPurchase)
 
 		} else if block.RawSTx[i].Vout[0].ScriptPubKey.Type == "stakerevoke" {
-			revocation := new(RevocationTransaction)
+			revocation := new(revocationTransaction)
 			revocation.TxID = block.RawSTx[i].Txid
 			displayBlock.Revocations = append(displayBlock.Revocations, *revocation)
 		} else {
-			vote := new(VoteTransaction)
+			vote := new(voteTransaction)
 			vote.TxID = block.RawSTx[i].Txid
 			vote.Votes = make(map[string]string)
 			// Parse Vote - TODO: Make this automatic
