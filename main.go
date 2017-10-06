@@ -124,6 +124,21 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 	}
 }
 
+func handleTransaction(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Client) {
+	t, err := template.ParseFiles("templates/transaction.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	t.Execute(w, "")
+}
+func handleIndex(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Client) {
+	t, err := template.ParseFiles("templates/index.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	t.Execute(w, "")
+}
+
 // parseBlock parses a GetBlockVerboseResult into a DisplayBlock for use
 // with the block.html templates
 func parseBlock(block *dcrjson.GetBlockVerboseResult, blockSubsidy *dcrjson.GetBlockSubsidyResult, maxHeight int64) *DisplayBlock {
@@ -307,6 +322,8 @@ func main() {
 	}
 
 	http.HandleFunc("/block/", makeHandler(handleBlock))
+	http.HandleFunc("/transaction/", makeHandler(handleTransaction))
+	http.HandleFunc("/", makeHandler(handleIndex))
 	log.Printf("Server started. Address = %v", server.Addr)
 	server.ListenAndServe()
 
