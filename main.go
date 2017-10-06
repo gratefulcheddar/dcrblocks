@@ -14,6 +14,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/decred/dcrd/dcrjson"
 	"github.com/decred/dcrrpcclient"
 	"github.com/decred/dcrutil"
 )
@@ -115,143 +116,7 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 				log.Fatal(err)
 			}
 
-			// Main purpose of creating a new struct is to allow the filtering of
-			// transactions by type. This can be moved to a separate function...
-			displayBlock := new(DisplayBlock)
-			displayBlock.BlockHeight = block.Height
-			displayBlock.BlockSize = block.Size
-			displayBlock.BlockVersion = block.Version
-			displayBlock.Confirmations = block.Confirmations
-			displayBlock.Hash = block.Hash
-			displayBlock.MerkleRoot = block.MerkleRoot
-			if displayBlock.BlockHeight != currentBlockHeight {
-				displayBlock.NextBlock = block.Height + 1
-			}
-			displayBlock.PreviousBlock = block.Height - 1
-			displayBlock.RevocationCount = block.Revocations
-			displayBlock.StakeRoot = block.StakeRoot
-			displayBlock.TicketPoolSize = block.PoolSize
-			displayBlock.TicketPrice = block.SBits
-			displayBlock.TicketsPurchased = block.FreshStake
-			displayBlock.Timestamp = time.Unix(block.Time, 0)
-			displayBlock.TransactionCount = len(block.RawTx)
-			displayBlock.VotesCast = block.Voters
-			displayBlock.VoteReward = (float64(blockSubsidy.PoS) / 100000000) / float64(block.Voters)
-			displayBlock.VoteVersion = block.StakeVersion
-
-			// Loop through the Raw Transactions, creating a slice of
-			// RegularTransactions with the minimum information
-			// required to display to user.
-			for i := 0; i < len(block.RawTx); i++ {
-				newTransaction := new(RegularTransaction)
-				newTransaction.TxID = block.RawTx[i].Txid
-				for _, value := range block.RawTx[i].Vin {
-					newTransaction.Amount += value.AmountIn
-				}
-				if block.Height == 0 {
-					newTransaction.Amount = 0
-				}
-				displayBlock.Transactions = append(displayBlock.Transactions, *newTransaction)
-			}
-
-			// Loop through the Raw Stake Transactions, creating two
-			// slices, one of TicketPurchaseTransactions and one of
-			// VoteTransactions, with the minimum information required
-			// to display to user.
-			for i := 0; i < len(block.RawSTx); i++ {
-				if block.RawSTx[i].Vout[0].ScriptPubKey.Type == "stakesubmission" {
-					ticketPurchase := new(TicketPurchaseTransaction)
-					ticketPurchase.TxID = block.RawSTx[i].Txid
-
-					if block.RawSTx[i].Confirmations > 256 {
-						ticketPurchase.Maturity = "Mature"
-					} else {
-						ticketPurchase.Maturity = "Immature"
-					}
-
-					displayBlock.TicketPurchases = append(displayBlock.TicketPurchases, *ticketPurchase)
-
-				} else if block.RawSTx[i].Vout[0].ScriptPubKey.Type == "stakerevoke" {
-					revocation := new(RevocationTransaction)
-					revocation.TxID = block.RawSTx[i].Txid
-					displayBlock.Revocations = append(displayBlock.Revocations, *revocation)
-				} else {
-					vote := new(VoteTransaction)
-					vote.TxID = block.RawSTx[i].Txid
-					vote.Votes = make(map[string]string)
-					// Parse Vote - TODO: Make this automatic
-					if len(block.RawSTx[i].Vout[1].ScriptPubKey.Hex) > 8 {
-						switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[8:10] {
-						case "04":
-							vote.Version = "4"
-							switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[4:6] {
-							case "00":
-								fallthrough
-							case "01":
-								vote.Votes["lnsupport"] = "abstain"
-								vote.Votes["sdiffalgo"] = "abstain"
-							case "02":
-								fallthrough
-							case "03":
-								vote.Votes["lnsupport"] = "abstain"
-								vote.Votes["sdiffalgo"] = "no"
-							case "04":
-								fallthrough
-							case "05":
-								vote.Votes["lnsupport"] = "abstain"
-								vote.Votes["sdiffalgo"] = "yes"
-							case "08":
-								fallthrough
-							case "09":
-								vote.Votes["lnsupport"] = "no"
-								vote.Votes["sdiffalgo"] = "abstain"
-							case "0a":
-								fallthrough
-							case "0b":
-								vote.Votes["lnsupport"] = "no"
-								vote.Votes["sdiffalgo"] = "no"
-							case "0c":
-								fallthrough
-							case "0d":
-								vote.Votes["lnsupport"] = "no"
-								vote.Votes["sdiffalgo"] = "yes"
-							case "10":
-								fallthrough
-							case "11":
-								vote.Votes["lnsupport"] = "yes"
-								vote.Votes["sdiffalgo"] = "abstain"
-							case "12":
-								fallthrough
-							case "13":
-								vote.Votes["lnsupport"] = "yes"
-								vote.Votes["sdiffalgo"] = "no"
-							case "14":
-								fallthrough
-							case "15":
-								vote.Votes["lnsupport"] = "yes"
-								vote.Votes["sdiffalgo"] = "yes"
-							}
-						case "05":
-							vote.Version = "5"
-							switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[4:6] {
-							case "00":
-								fallthrough
-							case "01":
-								vote.Votes["lnfeatures"] = "abstain"
-							case "02":
-								fallthrough
-							case "03":
-								vote.Votes["lnfeatures"] = "no"
-							case "04":
-								fallthrough
-							case "05":
-								vote.Votes["lnfeatures"] = "yes"
-							}
-						}
-					}
-					displayBlock.Votes = append(displayBlock.Votes, *vote)
-				}
-			}
+			displayBlock := parseBlock(block, blockSubsidy, currentBlockHeight)
 
 			// Load the template with the block data
 			t.Execute(w, displayBlock)
@@ -259,9 +124,147 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Cl
 	}
 }
 
-// TODO:
-// parseBlock parses a MsgBlock into a DisplayBlock for use
+// parseBlock parses a GetBlockVerboseResult into a DisplayBlock for use
 // with the block.html templates
+func parseBlock(block *dcrjson.GetBlockVerboseResult, blockSubsidy *dcrjson.GetBlockSubsidyResult, maxHeight int64) *DisplayBlock {
+
+	displayBlock := new(DisplayBlock)
+	displayBlock.BlockHeight = block.Height
+	displayBlock.BlockSize = block.Size
+	displayBlock.BlockVersion = block.Version
+	displayBlock.Confirmations = block.Confirmations
+	displayBlock.Hash = block.Hash
+	displayBlock.MerkleRoot = block.MerkleRoot
+	if displayBlock.BlockHeight != maxHeight {
+		displayBlock.NextBlock = block.Height + 1
+	}
+	displayBlock.PreviousBlock = block.Height - 1
+	displayBlock.RevocationCount = block.Revocations
+	displayBlock.StakeRoot = block.StakeRoot
+	displayBlock.TicketPoolSize = block.PoolSize
+	displayBlock.TicketPrice = block.SBits
+	displayBlock.TicketsPurchased = block.FreshStake
+	displayBlock.Timestamp = time.Unix(block.Time, 0)
+	displayBlock.TransactionCount = len(block.RawTx)
+	displayBlock.VotesCast = block.Voters
+	displayBlock.VoteReward = (float64(blockSubsidy.PoS) / 100000000) / float64(block.Voters)
+	displayBlock.VoteVersion = block.StakeVersion
+
+	// Loop through the Raw Transactions, creating a slice of
+	// RegularTransactions with the minimum information
+	// required to display to user.
+	for i := 0; i < len(block.RawTx); i++ {
+		newTransaction := new(RegularTransaction)
+		newTransaction.TxID = block.RawTx[i].Txid
+		for _, value := range block.RawTx[i].Vin {
+			newTransaction.Amount += value.AmountIn
+		}
+		if block.Height == 0 {
+			newTransaction.Amount = 0
+		}
+		displayBlock.Transactions = append(displayBlock.Transactions, *newTransaction)
+	}
+
+	// Loop through the Raw Stake Transactions, creating two
+	// slices, one of TicketPurchaseTransactions and one of
+	// VoteTransactions, with the minimum information required
+	// to display to user.
+	for i := 0; i < len(block.RawSTx); i++ {
+		if block.RawSTx[i].Vout[0].ScriptPubKey.Type == "stakesubmission" {
+			ticketPurchase := new(TicketPurchaseTransaction)
+			ticketPurchase.TxID = block.RawSTx[i].Txid
+
+			if block.RawSTx[i].Confirmations > 256 {
+				ticketPurchase.Maturity = "Mature"
+			} else {
+				ticketPurchase.Maturity = "Immature"
+			}
+
+			displayBlock.TicketPurchases = append(displayBlock.TicketPurchases, *ticketPurchase)
+
+		} else if block.RawSTx[i].Vout[0].ScriptPubKey.Type == "stakerevoke" {
+			revocation := new(RevocationTransaction)
+			revocation.TxID = block.RawSTx[i].Txid
+			displayBlock.Revocations = append(displayBlock.Revocations, *revocation)
+		} else {
+			vote := new(VoteTransaction)
+			vote.TxID = block.RawSTx[i].Txid
+			vote.Votes = make(map[string]string)
+			// Parse Vote - TODO: Make this automatic
+			if len(block.RawSTx[i].Vout[1].ScriptPubKey.Hex) > 8 {
+				switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[8:10] {
+				case "04":
+					vote.Version = "4"
+					switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[4:6] {
+					case "00":
+						fallthrough
+					case "01":
+						vote.Votes["lnsupport"] = "abstain"
+						vote.Votes["sdiffalgo"] = "abstain"
+					case "02":
+						fallthrough
+					case "03":
+						vote.Votes["lnsupport"] = "abstain"
+						vote.Votes["sdiffalgo"] = "no"
+					case "04":
+						fallthrough
+					case "05":
+						vote.Votes["lnsupport"] = "abstain"
+						vote.Votes["sdiffalgo"] = "yes"
+					case "08":
+						fallthrough
+					case "09":
+						vote.Votes["lnsupport"] = "no"
+						vote.Votes["sdiffalgo"] = "abstain"
+					case "0a":
+						fallthrough
+					case "0b":
+						vote.Votes["lnsupport"] = "no"
+						vote.Votes["sdiffalgo"] = "no"
+					case "0c":
+						fallthrough
+					case "0d":
+						vote.Votes["lnsupport"] = "no"
+						vote.Votes["sdiffalgo"] = "yes"
+					case "10":
+						fallthrough
+					case "11":
+						vote.Votes["lnsupport"] = "yes"
+						vote.Votes["sdiffalgo"] = "abstain"
+					case "12":
+						fallthrough
+					case "13":
+						vote.Votes["lnsupport"] = "yes"
+						vote.Votes["sdiffalgo"] = "no"
+					case "14":
+						fallthrough
+					case "15":
+						vote.Votes["lnsupport"] = "yes"
+						vote.Votes["sdiffalgo"] = "yes"
+					}
+				case "05":
+					vote.Version = "5"
+					switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[4:6] {
+					case "00":
+						fallthrough
+					case "01":
+						vote.Votes["lnfeatures"] = "abstain"
+					case "02":
+						fallthrough
+					case "03":
+						vote.Votes["lnfeatures"] = "no"
+					case "04":
+						fallthrough
+					case "05":
+						vote.Votes["lnfeatures"] = "yes"
+					}
+				}
+			}
+			displayBlock.Votes = append(displayBlock.Votes, *vote)
+		}
+	}
+	return displayBlock
+}
 
 // makeHandler creates a new dcrrpcclient, passes it to the
 // input function for executing, shuts down the client,
