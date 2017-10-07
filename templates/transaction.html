@@ -16,12 +16,25 @@
     </section>
     <section class="container">
       <div>
-        <table class="transactionPageTable">
+        <table class="txnSummaryTable">
           <thead>
-
+              <th class="tableTitle" colspan="2">Transaction Summary:</th>
           </thead>
           <tbody>
-
+              <tr><td>Hex:</td><td>{{ .Hex }}</td></tr>
+              <tr><td>Txid:</td><td>{{ .Txid }}</td></tr>
+              <tr><td>Version:</td><td>{{ .Version }}</td></tr>
+              {{ if .LockTime }}
+              <tr><td>LockTime:</td><td>{{ .LockTime }}</td></tr>
+              {{ end }}
+              {{ if .Expiry }}
+              <tr><td>Expiry:</td><td>{{ .Expiry }}</td></tr>
+              {{ end }}
+              <tr><td>Included in Block:</td><td><a href="/block/{{ .BlockHeight }}">{{ .BlockHeight }}</a></td></tr>
+              <tr><td>BlockIndex:</td><td>{{ .BlockIndex }}</td></tr>
+              <tr><td>Confirmations:</td><td>{{ .Confirmations }}</td></tr>
+              <tr><td>Time:</td><td>{{ .Time }}</td></tr>
+              <tr><td>Blocktime:</td><td>{{ .Blocktime }}</td></tr>
           </tbody>
         </table>
       </div>
