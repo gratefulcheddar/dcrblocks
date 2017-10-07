@@ -38,29 +38,29 @@ type displayBlock struct {
 	TicketPoolSize   uint32
 	VoteReward       float64
 
-	Transactions    []regularTransaction
-	Votes           []voteTransaction
-	TicketPurchases []ticketPurchaseTransaction
-	Revocations     []revocationTransaction
+	Transactions    []regular
+	Votes           []vote
+	TicketPurchases []ticketPurchase
+	Revocations     []revocation
 }
 
-type regularTransaction struct {
+type regular struct {
 	Amount float64
 	TxID   string
 }
 
-type voteTransaction struct {
+type vote struct {
 	Votes   map[string]string
 	TxID    string
 	Version string
 }
 
-type ticketPurchaseTransaction struct {
+type ticketPurchase struct {
 	TxID     string
 	Maturity string
 }
 
-type revocationTransaction struct {
+type revocation struct {
 	TxID string
 }
 
@@ -146,15 +146,15 @@ func parseBlock(block *dcrjson.GetBlockVerboseResult, blockSubsidy *dcrjson.GetB
 	// regularTransactions with the minimum information
 	// required to display to user.
 	for i := 0; i < len(block.RawTx); i++ {
-		newTransaction := new(regularTransaction)
-		newTransaction.TxID = block.RawTx[i].Txid
+		regularTransaction := new(regular)
+		regularTransaction.TxID = block.RawTx[i].Txid
 		for _, value := range block.RawTx[i].Vin {
-			newTransaction.Amount += value.AmountIn
+			regularTransaction.Amount += value.AmountIn
 		}
 		if block.Height == 0 {
-			newTransaction.Amount = 0
+			regularTransaction.Amount = 0
 		}
-		displayBlock.Transactions = append(displayBlock.Transactions, *newTransaction)
+		displayBlock.Transactions = append(displayBlock.Transactions, *regularTransaction)
 	}
 
 	// Loop through the Raw Stake Transactions, creating two
@@ -163,7 +163,7 @@ func parseBlock(block *dcrjson.GetBlockVerboseResult, blockSubsidy *dcrjson.GetB
 	// to display to user.
 	for i := 0; i < len(block.RawSTx); i++ {
 		if block.RawSTx[i].Vout[0].ScriptPubKey.Type == "stakesubmission" {
-			ticketPurchase := new(ticketPurchaseTransaction)
+			ticketPurchase := new(ticketPurchase)
 			ticketPurchase.TxID = block.RawSTx[i].Txid
 
 			if block.RawSTx[i].Confirmations > 256 {
@@ -175,11 +175,11 @@ func parseBlock(block *dcrjson.GetBlockVerboseResult, blockSubsidy *dcrjson.GetB
 			displayBlock.TicketPurchases = append(displayBlock.TicketPurchases, *ticketPurchase)
 
 		} else if block.RawSTx[i].Vout[0].ScriptPubKey.Type == "stakerevoke" {
-			revocation := new(revocationTransaction)
+			revocation := new(revocation)
 			revocation.TxID = block.RawSTx[i].Txid
 			displayBlock.Revocations = append(displayBlock.Revocations, *revocation)
 		} else {
-			vote := new(voteTransaction)
+			vote := new(vote)
 			vote.TxID = block.RawSTx[i].Txid
 			vote.Votes = make(map[string]string)
 			// Parse Vote - TODO: Make this automatic
