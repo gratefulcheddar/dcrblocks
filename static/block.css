@@ -15,52 +15,44 @@ Typography:
 
 */
 /* /block/ Table */
-table.alternating-colors > tbody > tr {
-  border-bottom: 2px solid #FFFFFF;
+div.leftColumn {
+  width: 250px;
+  float: left;
 }
-table.alternating-colors > tbody > tr > td,
-table.alternating-colors > tbody > tr > th {
-  padding: 10px;
+div.rightColumn {
+  float: right;
+  width: 450px;
 }
 table#blockVoteTable td {
   padding: 0px;
 }
-#blockVoteDetailTable tbody td {
+table#blockVoteDetailTable tbody td {
   padding: 10px 10px 0px 10px;
 }
-#blockVoteDetailTable {
+table#blockVoteDetailTable {
   width: 100%;
 }
-#blockVoteDetailTable tr td.voteRow {
+table#blockVoteDetailTable tr td.voteRow {
   padding-bottom: 13px;
   overflow: scroll;
   text-overflow: clip;
 }
-tbody td {
-  overflow: hidden;
-  text-overflow: ellipsis; 
-}
-th.tableTitle {
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-size: 18px;
-}
-.col-left {
+div.leftColumn table .col-left {
   width: 35%;
 }
-#blockTransactionTable .col-left {
+table#blockTransactionTable .col-left {
   width: 70%;
 }
-#blockVoteTable .col-left {
+table#blockVoteTable .col-left {
   width: 25%
 }
-#blockVoteDetailTable .col-left {
+table#blockVoteDetailTable .col-left {
   width: 83%;
 }
-#blockTicketTable .col-left {
+table#blockTicketTable .col-left {
   width: 83%
 }
-.voteButton {
+span.voteButton {
     background-color: var(--background-color);
     padding: 3px 7px 3px 7px;
     border-radius: 150px;

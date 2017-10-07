@@ -34,6 +34,13 @@ table {
     color: var(--decred-dark-blue);
     white-space: nowrap;
 }
+table.alternating-colors > tbody > tr {
+    border-bottom: 2px solid #FFFFFF;
+}
+table.alternating-colors > tbody > tr > td,
+table.alternating-colors > tbody > tr > th {
+  padding: 10px;
+}
 table a:link {
     color: var(--decred-dark-blue);
     text-decoration: none;
@@ -46,6 +53,15 @@ table a:hover {
     color: white;
     text-decoration: none;
 }
+th.tableTitle {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 18px;
+}
+tbody td {
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
 th:nth-child(1),
 td:nth-child(1) {
     text-align: left;
@@ -54,41 +70,33 @@ th:nth-child(2),
 td:nth-child(2) {
     text-align: right;
 }
-.container {
+section.container {
     width: 700px;
 }
-.pageHeader {
-    width: 670px;
+div.pageHeader {
+    width: 665px;
     height: 50px;
     font-weight: 700;
     font-family: "Source Sans Pro";
     text-align: right;
     padding-bottom: 15px;
 }
-.pageTitle {
+a.pageTitle {
     color: var(--decred-green);
     font-size: 50px;
     text-decoration: none;
 }
-.subTitle {
+span.subTitle {
     font-size: 25px;
     margin-top: -15px;
     color: var(--decred-light-blue);
 }
-.leftColumn {
-    width: 250px;
-    float: left;
-}
-.rightColumn {
-    float: right;
-    width: 450px;
-}
-.alternating-colors > tbody > tr:nth-child(odd) {
+table.alternating-colors > tbody > tr:nth-child(odd) {
     background-color: var(--decred-light-blue);
 }
-.alternating-colors > tbody > tr:nth-child(even) {
+table.alternating-colors > tbody > tr:nth-child(even) {
     background-color: var(--decred-green);
 }
-.alternating-colors > tbody > tr:hover {
+table.alternating-colors > tbody > tr:hover {
     background-color: var(--decred-orange);
 }
