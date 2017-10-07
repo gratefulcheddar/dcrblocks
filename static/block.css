@@ -15,15 +15,6 @@ Typography:
 
 */
 /* /block/ Table */
-table {
-  table-layout: fixed;
-  width: 95%;
-  font-size: 12px;
-  border-collapse: collapse;
-  font-family: "Source Sans Pro";
-  color: var(--decred-dark-blue);
-  white-space: nowrap;
-}
 table.alternating-colors > tbody > tr {
   border-bottom: 2px solid #FFFFFF;
 }

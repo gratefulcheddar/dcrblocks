@@ -25,7 +25,15 @@ body {
     --background-color: #D3D3D3;
     background-color: var(--background-color) 
 }
-
+table {
+    table-layout: fixed;
+    width: 95%;
+    font-size: 12px;
+    border-collapse: collapse;
+    font-family: "Source Sans Pro";
+    color: var(--decred-dark-blue);
+    white-space: nowrap;
+}
 table a:link {
     color: var(--decred-dark-blue);
     text-decoration: none;
