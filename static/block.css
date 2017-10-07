@@ -1,0 +1,89 @@
+/* 
+Decred Branding Colors:
+-----------------------
+Primary:
+    #2971FF - Key Blue
+    #2ED6A1 - Turquiose
+    #0C1E3E - Dark Blue
+Complimentary Colors:
+    #69D3F5 - Light Blue
+    #41BF53 - Green
+    #FD714A - Orange
+Typography:
+    Source Sans Pro
+    Inconsolata
+
+*/
+/* /block/ Table */
+table {
+  table-layout: fixed;
+  width: 95%;
+  font-size: 12px;
+  border-collapse: collapse;
+  font-family: "Source Sans Pro";
+  color: var(--decred-dark-blue);
+  white-space: nowrap;
+}
+table.alternating-colors > tbody > tr {
+  border-bottom: 2px solid #FFFFFF;
+}
+table.alternating-colors > tbody > tr > td,
+table.alternating-colors > tbody > tr > th {
+  padding: 10px;
+}
+table#blockVoteTable td {
+  padding: 0px;
+}
+#blockVoteDetailTable tbody td {
+  padding: 10px 10px 0px 10px;
+}
+#blockVoteDetailTable {
+  width: 100%;
+}
+#blockVoteDetailTable tr td.voteRow {
+  padding-bottom: 13px;
+  overflow: scroll;
+  text-overflow: clip;
+}
+tbody td {
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
+th.tableTitle {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 18px;
+}
+.alternating-colors > tbody > tr:nth-child(odd) {
+    background-color: var(--decred-light-blue);
+}
+.alternating-colors > tbody > tr:nth-child(even) {
+    background-color: var(--decred-green);
+}
+.alternating-colors > tbody > tr:hover {
+    background-color: var(--decred-orange);
+}
+.col-left {
+  width: 35%;
+}
+#blockTransactionTable .col-left {
+  width: 70%;
+}
+#blockVoteTable .col-left {
+  width: 25%
+}
+#blockVoteDetailTable .col-left {
+  width: 83%;
+}
+#blockTicketTable .col-left {
+  width: 83%
+}
+.voteButton {
+    background-color: var(--background-color);
+    padding: 3px 7px 3px 7px;
+    border-radius: 150px;
+    margin-right: 4px;
+    border: 1.5px solid var(--decred-dark-blue);
+    text-transform: uppercase;
+    font-size: 10px;
+}

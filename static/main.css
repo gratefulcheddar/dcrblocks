@@ -38,112 +38,12 @@ table a:hover {
     color: white;
     text-decoration: none;
 }
-/* /block/ Table */
-.blockTable,
-.transactionTable,
-.voteTable,
-.ticketTable,
-.revocationTable,
-.voteDetailTable {
-    table-layout: fixed;
-    width: 95%;
-    font-size: 12px;
-    border-collapse: collapse;
-    font-family: "Source Sans Pro";
-    color: var(--decred-dark-blue);
-}
-
-.blockTable tbody th {
+th:nth-child(1),
+td:nth-child(1) {
     text-align: left;
 }
-.blockTable tbody th,
-.blockTable tbody td,
-.transactionTable tbody th,
-.transactionTable tbody td,
-.ticketTable tbody th,
-.ticketTable tbody td,
-.revocationTable tbody th,
-.revocationTable tbody td {
-    border-bottom: 2px solid #FFFFFF;
-    padding: 10px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.voteTable tbody th,
-.voteTable tbody td {
-    padding: 0px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.voteTable > tbody > tr {
-    border-bottom: 2px solid #FFFFFF;
-}
-.voteDetailTable tbody td {
-    padding: 10px 10px 0px 10px;
-}
-.voteDetailTable {
-    width: 100%;
-}
-.tableTitle {
-    text-align: left;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-size: 18px;
-}
-.blockTable tbody tr:nth-child(odd),
-.transactionTable tbody tr:nth-child(odd),
-.voteTable > tbody > tr:nth-child(odd),
-.ticketTable tbody tr:nth-child(odd),
-.revocationTable tbody tr:nth-child(odd) {
-    background-color: var(--decred-light-blue);
-}
-.blockTable tbody tr:nth-child(even),
-.transactionTable tbody tr:nth-child(even),
-.voteTable > tbody > tr:nth-child(even),
-.ticketTable tbody tr:nth-child(even),
-.revocationTable tbody tr:nth-child(even) {
-    background-color: var(--decred-green);
-}
-.blockTable tbody tr:hover,
-.transactionTable tbody tr:hover,
-.voteTable tbody tr:hover,
-.ticketTable tbody tr:hover,
-.revocationTable tbody tr:hover {
-    background-color: var(--decred-orange);
-}
-.blockTable thead th:nth-child(1) {
-    width: 45%;
-}
-.blockTable thead th:nth-child(2) {
-    width: 55%;
-}
-.transactionTable thead th:nth-child(1) {
-    width: 70%;
-}
-.transactionTable thead th:nth-child(2) {
-    width: 30%;
-}
-.voteTable thead th:nth-child(1) {
-    width: 40%;
-}
-.voteTable thead th:nth-child(2) {
-    width: 60%;
-    text-align: right;
-}
-.ticketTable thead th:nth-child(1),
-.voteDetailTable tbody td:nth-child(1) {
-    width: 80%;
-}
-.ticketTable thead th:nth-child(2),
-.voteDetailTable tbody td:nth-child(2) {
-    width: 20%;
-}
-tbody td:nth-child(1) {
-    text-align: left;
-}
-tbody td:nth-child(2) {
+th:nth-child(2),
+td:nth-child(2) {
     text-align: right;
 }
 .container {
@@ -174,18 +74,4 @@ tbody td:nth-child(2) {
 .rightColumn {
     float: right;
     width: 450px;
-}
-.voteButton {
-    background-color: var(--background-color);
-    padding: 3px 7px 3px 7px;
-    border-radius: 150px;
-    margin-right: 4px;
-    border: 1.5px solid var(--decred-dark-blue);
-    text-transform: uppercase;
-    font-size: 10px;
-}
-.voteDetailTable tbody tr td.voteRow {
-    padding-bottom: 13px;
-    overflow: scroll;
-    text-overflow: clip;
 }

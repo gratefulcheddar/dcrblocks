@@ -2,6 +2,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="/static/main.css" type='text/css'>
+        <link rel="stylesheet" href="/static/block.css" type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro|Sedgwick+Ave+Display' rel='stylesheet' type='text/css'>
         <title>
             Decred Block #{{ .BlockHeight }}
@@ -14,9 +15,15 @@
                 <span class="subTitle">by cheesepool.org</span>
             </div>
         </section>
+
         <section class="container">
             <div class="leftColumn">
-                <table class="blockTable">
+
+                <table id="blockVersionTable" class="alternating-colors">
+                    <colgroup>
+                        <col class="col-left">
+                        <col class="col-right">
+                    </colgroup>
                     <thead>
                         <th class="tableTitle">Versions:</th>
                     </thead>
@@ -31,7 +38,12 @@
                         </tr>
                     </tbody>
                 </table>
-                <table class="blockTable">
+
+                <table id="blockSummaryTable" class="alternating-colors">
+                    <colgroup>
+                        <col class="col-left">
+                        <col class="col-right">
+                    </colgroup>
                     <thead>
                         <th class="tableTitle">Summary:</th>
                         <td></td>
@@ -71,7 +83,12 @@
                         {{ end }}
                     </tbody>
                 </table>
-                <table class="blockTable">
+
+                <table id="blockHashTable" class="alternating-colors">
+                    <colgroup>
+                        <col class="col-left">
+                        <col class="col-right">
+                    </colgroup>
                     <thead>
                         <th class="tableTitle">Hashes:</th>
                         <td></td>
@@ -92,7 +109,12 @@
                         </tr>
                     </tbody>
                 </table>
-                <table class="blockTable">
+
+                <table id="blockTicketSummaryTable" class="alternating-colors">
+                    <colgroup>
+                        <col class="col-left">
+                        <col class="col-right">
+                    </colgroup>
                     <thead>
                         <th class="tableTitle">Tickets:</th>
                         <td></td>
@@ -100,7 +122,7 @@
                     <tbody>
                         <tr>
                             <th>Price:</th>
-                            <td>{{.TicketPrice}}</td>
+                            <td>{{.TicketPrice}} DCR</td>
                         </tr>
                         <tr>
                             <th>Purchases:</th>
@@ -121,9 +143,15 @@
                     </tbody>
                 </table>
             </div>
+
             <div class="rightColumn">
+
                 {{ if .Transactions }}
-                <table class="transactionTable">
+                <table id="blockTransactionTable" class="alternating-colors">
+                    <colgroup>
+                        <col class="col-left">
+                        <col class="col-right">
+                    </colgroup>
                     <thead>
                         <th class="tableTitle">Transactions:</th>
                     </thead>
@@ -137,8 +165,13 @@
                     </tbody>
                 </table>
                 {{ end }}
+
                 {{ if .Votes }}
-                <table class="voteTable">
+                <table id="blockVoteTable" class="alternating-colors">
+                    <colgroup>
+                        <col class="col-left">
+                        <col class="col-right">
+                    </colgroup>
                     <thead>
                         <th class="tableTitle">Votes:</th>
                         <th class="tableTitle">{{ .VoteReward }} DCR Reward</th>
@@ -146,7 +179,11 @@
                     <tbody>
                         {{ range .Votes }}
                         <tr><td colspan="2">
-                            <table class="voteDetailTable">
+                            <table id="blockVoteDetailTable">
+                                <colgroup>
+                                    <col class="col-left">
+                                    <col class="col-right">
+                                </colgroup>
                                 <tbody>
                                     <tr>
                                         <td><a href="/transaction/{{ .TxID }}">{{ .TxID }}</td>
@@ -168,8 +205,13 @@
                     </tbody>
                 </table>
                 {{ end }}
+
                 {{ if .TicketPurchases }}
-                <table class="ticketTable">
+                <table id="blockTicketTable" class="alternating-colors">
+                    <colgroup>
+                        <col class="col-left">
+                        <col class="col-right">
+                    </colgroup>
                     <thead>
                         <th class="tableTitle">Ticket Purchases:</th>
                     </thead>
@@ -183,20 +225,22 @@
                     </tbody>
                 </table>
                 {{ end }}
+
                 {{ if .Revocations }}
-                <table class="revocationTable">
-                        <thead>
-                            <th class="tableTitle">Ticket Revocations:</th>
-                        </thead>
-                        <tbody>
-                            {{ range .Revocations }}
-                            <tr>
-                                <td><a href="/transaction/{{ .TxID }}">{{ .TxID }}</td>
-                            </tr>
-                            {{ end }}
-                        </tbody>
-                    </table>
+                <table id="blockRevocationTable" class="alternating-colors">
+                    <thead>
+                        <th class="tableTitle">Ticket Revocations:</th>
+                    </thead>
+                    <tbody>
+                        {{ range .Revocations }}
+                        <tr>
+                            <td><a href="/transaction/{{ .TxID }}">{{ .TxID }}</td>
+                        </tr>
+                        {{ end }}
+                    </tbody>
+                </table>
                 {{ end }}
+
             </div>
         </section>
     </body>
