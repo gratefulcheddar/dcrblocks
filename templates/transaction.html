@@ -2,6 +2,7 @@
 <html>
   <head>
     <link rel="stylesheet" href="/static/main.css" type='text/css'>
+    <link rel="stylesheet" href="/static/transaction.css" type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro|Sedgwick+Ave+Display' rel='stylesheet' type='text/css'>
     <title>
       Decred Transaction #{{ . }}
@@ -16,25 +17,28 @@
     </section>
     <section class="container">
       <div>
-        <table class="txnSummaryTable">
+        <table id="txnSummaryTable" class="alternating-colors">
+          <colgroup>
+            <col class="col-left">
+            <col class="col-right">
+          </colgroup>
           <thead>
-              <th class="tableTitle" colspan="2">Transaction Summary:</th>
+              <th class="tableTitle">Transaction Summary:</th>
           </thead>
           <tbody>
-              <tr><td>Hex:</td><td>{{ .Hex }}</td></tr>
-              <tr><td>Txid:</td><td>{{ .Txid }}</td></tr>
-              <tr><td>Version:</td><td>{{ .Version }}</td></tr>
+              <tr><th>Hex:</th><td>{{ .Hex }}</td></tr>
+              <tr><th>Txid:</th><td>{{ .Txid }}</td></tr>
+              <tr><th>Version:</th><td>{{ .Version }}</td></tr>
               {{ if .LockTime }}
-              <tr><td>LockTime:</td><td>{{ .LockTime }}</td></tr>
+              <tr><th>LockTime:</th><td>{{ .LockTime }}</td></tr>
               {{ end }}
               {{ if .Expiry }}
-              <tr><td>Expiry:</td><td>{{ .Expiry }}</td></tr>
+              <tr><th>Expiry:</th><td>{{ .Expiry }}</td></tr>
               {{ end }}
-              <tr><td>Included in Block:</td><td><a href="/block/{{ .BlockHeight }}">{{ .BlockHeight }}</a></td></tr>
-              <tr><td>BlockIndex:</td><td>{{ .BlockIndex }}</td></tr>
-              <tr><td>Confirmations:</td><td>{{ .Confirmations }}</td></tr>
-              <tr><td>Time:</td><td>{{ .Time }}</td></tr>
-              <tr><td>Blocktime:</td><td>{{ .Blocktime }}</td></tr>
+              <tr><th>Included in Block:</th><td><a href="/block/{{ .BlockHeight }}">{{ .BlockHeight }}</a></td></tr>
+              <tr><th>Confirmations:</th><td>{{ .Confirmations }}</td></tr>
+              <tr><th>Time:</th><td>{{ .Time }}</td></tr>
+              <tr><th>Blocktime:</th><td>{{ .Blocktime }}</td></tr>
           </tbody>
         </table>
       </div>
