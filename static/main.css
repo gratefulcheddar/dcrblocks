@@ -75,3 +75,12 @@ td:nth-child(2) {
     float: right;
     width: 450px;
 }
+.alternating-colors > tbody > tr:nth-child(odd) {
+    background-color: var(--decred-light-blue);
+}
+.alternating-colors > tbody > tr:nth-child(even) {
+    background-color: var(--decred-green);
+}
+.alternating-colors > tbody > tr:hover {
+    background-color: var(--decred-orange);
+}

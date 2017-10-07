@@ -54,15 +54,6 @@ th.tableTitle {
     letter-spacing: 2px;
     font-size: 18px;
 }
-.alternating-colors > tbody > tr:nth-child(odd) {
-    background-color: var(--decred-light-blue);
-}
-.alternating-colors > tbody > tr:nth-child(even) {
-    background-color: var(--decred-green);
-}
-.alternating-colors > tbody > tr:hover {
-    background-color: var(--decred-orange);
-}
 .col-left {
   width: 35%;
 }
