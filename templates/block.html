@@ -130,7 +130,7 @@
                     <tbody>
                         {{ range .Transactions }}
                         <tr>
-                            <td>{{ .TxID }}</td>
+                            <td><a href="/transaction/{{ .TxID }}">{{ .TxID }}</a></td>
                             <td>{{ printf "%9.8f" .Amount }} DCR</td>
                         </tr>
                         {{ end }}
@@ -149,7 +149,7 @@
                             <table class="voteDetailTable">
                                 <tbody>
                                     <tr>
-                                        <td>{{ .TxID }}</td>
+                                        <td><a href="/transaction/{{ .TxID }}">{{ .TxID }}</td>
                                         <td>Version: {{ .Version }}</td>
                                     </tr>
                                     <tr>
@@ -176,7 +176,7 @@
                     <tbody>
                         {{ range .TicketPurchases }}
                         <tr>
-                            <td>{{ .TxID }}</td>
+                            <td><a href="/transaction/{{ .TxID }}">{{ .TxID }}</td>
                             <td>{{ .Maturity }}</td>
                         </tr>
                         {{ end }}
@@ -191,7 +191,7 @@
                         <tbody>
                             {{ range .Revocations }}
                             <tr>
-                                <td>{{ .TxID }}</td>
+                                <td><a href="/transaction/{{ .TxID }}">{{ .TxID }}</td>
                             </tr>
                             {{ end }}
                         </tbody>
