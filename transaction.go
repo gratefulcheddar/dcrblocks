@@ -9,21 +9,6 @@ import (
 	"github.com/decred/dcrrpcclient"
 )
 
-type ticketPurchaseTransaction struct {
-}
-
-type coinbaseTransaction struct {
-}
-
-type regularTransaction struct {
-}
-
-type revocationTransaction struct {
-}
-
-type voteTransaction struct {
-}
-
 func handleTransaction(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Client) {
 	t, err := template.ParseFiles("templates/transaction.html")
 	if err != nil {
@@ -40,25 +25,33 @@ func handleTransaction(w http.ResponseWriter, r *http.Request, client *dcrrpccli
 		if err != nil {
 			log.Fatal(err)
 		}
-		GetRawTransactionVerbose, err := client.GetRawTransactionVerbose(transactionHash)
+		rawTransactionVerbose, err := client.GetRawTransactionVerbose(transactionHash)
 
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		transactionType := GetRawTransactionVerbose.Vout[0].ScriptPubKey.Type
+		// transactionType := rawTransactionVerbose.Vout[0].ScriptPubKey.Type
+
+		/*var typeString string
 
 		if transactionType == "stakesubmission" {
 			// Ticket Purchase
+			typeString = "Ticket Purchase"
 		} else if transactionType == "scripthash" {
 			// Coinbase
+			typeString = "Coinbase"
 		} else if transactionType == "pubkeyhash" {
 			// Regular Transaction
+			typeString = "Transaction"
 		} else if transactionType == "stakerevoke" {
 			// Revocation
+			typeString = "Revocation"
 		} else {
 			// Vote
-		}
-		t.Execute(w, GetRawTransactionVerbose)
+			typeString = "Vote"
+		}*/
+
+		t.Execute(w, rawTransactionVerbose)
 	}
 }
