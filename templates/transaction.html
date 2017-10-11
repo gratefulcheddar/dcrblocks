@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="/static/transaction.css" type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro|Sedgwick+Ave+Display' rel='stylesheet' type='text/css'>
     <title>
-      Decred Transaction #{{ . }}
+      Decred Transaction {{ .Txid }}
     </title>
   </head>
   <body>
@@ -27,7 +27,7 @@
           </thead>
           <tbody>
               <tr><th>Hex:</th><td>{{ .Hex }}</td></tr>
-              <tr><th>Txid:</th><td>{{ .Txid }}</td></tr>
+              <tr><th>TxID:</th><td>{{ .Txid }}</td></tr>
               <tr><th>Version:</th><td>{{ .Version }}</td></tr>
               {{ if .LockTime }}
               <tr><th>LockTime:</th><td>{{ .LockTime }}</td></tr>
@@ -37,11 +37,54 @@
               {{ end }}
               <tr><th>Included in Block:</th><td><a href="/block/{{ .BlockHeight }}">{{ .BlockHeight }}</a></td></tr>
               <tr><th>Confirmations:</th><td>{{ .Confirmations }}</td></tr>
-              <tr><th>Time:</th><td>{{ .Time }}</td></tr>
-              <tr><th>Blocktime:</th><td>{{ .Blocktime }}</td></tr>
+              <tr><th>Received Time:</th><td>{{ .Time }}</td></tr>
           </tbody>
         </table>
       </div>
+
+      {{ if .Vin }}
+      <div>
+        <table id="txnInputsTable" class="alternating-colors">
+          <colgroup>
+            <col class="col-left">
+            <col class="col-right">
+          </colgroup>
+          <thead>
+            <th class="tableTitle">Transaction Inputs:</th>
+          </thead>
+          <tbody>
+          {{ range $index, $output := .Vin }}
+          <table id="txnInputDetailTable">
+              <thead><th>Input #{{ $index }}</th></thead>
+              <tbody><tr><td> {{ . }}</td></tr></tbody>
+          </table>
+          {{ end }}
+          </tbody>
+        </table>
+      </div>
+      {{ end }}
+
+      {{ if .Vout }}
+      <div>
+        <table id="txnOutputsTable" class="alternating-colors">
+          <colgroup>
+            <col class="col-left">
+            <col class="col-right">
+          </colgroup>
+          <thead>
+            <th class="tableTitle">Transaction Outputs:</th>
+          </thead>
+          <tbody>
+          {{ range $index, $output := .Vout }}
+          <table id="txnOutputDetailTable">
+              <thead><th>Output #{{ $index }}</th></thead>
+              <tbody><tr><td> {{ . }}</td></tr></tbody>
+          </table>
+          {{ end }}
+          </tbody>
+        </table>
+      </div>
+      {{ end }}
     </section>
   </body>
 </html>
