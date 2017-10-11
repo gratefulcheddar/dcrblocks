@@ -4,10 +4,47 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/decred/dcrd/chaincfg/chainhash"
+	"github.com/decred/dcrd/dcrjson"
 	"github.com/decred/dcrrpcclient"
 )
+
+type displayTransaction struct {
+	Hex           string
+	TxID          string
+	Version       int32
+	LockTime      uint32
+	Expiry        uint32
+	Inputs        []txnInput
+	Outputs       []txnOutput
+	BlockHash     string
+	BlockHeight   int64
+	Confirmations int64
+	Time          time.Time
+	Type          string
+}
+
+type txnInput struct {
+	Coinbase    string
+	Stakebase   string
+	TxID        string
+	Vout        uint32
+	Tree        int8
+	Sequence    uint32
+	AmountIn    float64
+	BlockHeight uint32
+	BlockIndex  uint32
+	ScriptSig   *dcrjson.ScriptSig
+}
+
+type txnOutput struct {
+	Value        float64
+	N            uint32
+	Version      uint16
+	ScriptPubKey dcrjson.ScriptPubKeyResult
+}
 
 func handleTransaction(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Client) {
 	t, err := template.ParseFiles("templates/transaction.html")
@@ -31,26 +68,26 @@ func handleTransaction(w http.ResponseWriter, r *http.Request, client *dcrrpccli
 			log.Fatal(err)
 		}
 
-		// transactionType := rawTransactionVerbose.Vout[0].ScriptPubKey.Type
+		displayTransaction := new(displayTransaction)
 
-		/*var typeString string
+		transactionType := rawTransactionVerbose.Vout[0].ScriptPubKey.Type
 
 		if transactionType == "stakesubmission" {
 			// Ticket Purchase
-			typeString = "Ticket Purchase"
+			displayTransaction.Type = "Ticket Purchase"
 		} else if transactionType == "scripthash" {
 			// Coinbase
-			typeString = "Coinbase"
+			displayTransaction.Type = "Coinbase"
 		} else if transactionType == "pubkeyhash" {
 			// Regular Transaction
-			typeString = "Transaction"
+			displayTransaction.Type = "Transaction"
 		} else if transactionType == "stakerevoke" {
 			// Revocation
-			typeString = "Revocation"
-		} else {
+			displayTransaction.Type = "Revocation"
+		} else if rawTransactionVerbose.Vout[2].ScriptPubKey.Type == "stakegen" {
 			// Vote
-			typeString = "Vote"
-		}*/
+			displayTransaction.Type = "Vote"
+		}
 
 		t.Execute(w, rawTransactionVerbose)
 	}
