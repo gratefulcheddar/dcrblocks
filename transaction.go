@@ -12,38 +12,9 @@ import (
 )
 
 type displayTransaction struct {
-	Hex           string
-	TxID          string
-	Version       int32
-	LockTime      uint32
-	Expiry        uint32
-	Inputs        []txnInput
-	Outputs       []txnOutput
-	BlockHash     string
-	BlockHeight   int64
-	Confirmations int64
-	Time          time.Time
-	Type          string
-}
-
-type txnInput struct {
-	Coinbase    string
-	Stakebase   string
-	TxID        string
-	Vout        uint32
-	Tree        int8
-	Sequence    uint32
-	AmountIn    float64
-	BlockHeight uint32
-	BlockIndex  uint32
-	ScriptSig   *dcrjson.ScriptSig
-}
-
-type txnOutput struct {
-	Value        float64
-	N            uint32
-	Version      uint16
-	ScriptPubKey dcrjson.ScriptPubKeyResult
+	RawTransactionVerbose *dcrjson.TxRawResult
+	Time                  time.Time
+	Type                  string
 }
 
 func handleTransaction(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Client) {
@@ -62,15 +33,16 @@ func handleTransaction(w http.ResponseWriter, r *http.Request, client *dcrrpccli
 		if err != nil {
 			log.Fatal(err)
 		}
-		rawTransactionVerbose, err := client.GetRawTransactionVerbose(transactionHash)
+
+		displayTransaction := new(displayTransaction)
+
+		displayTransaction.RawTransactionVerbose, err = client.GetRawTransactionVerbose(transactionHash)
 
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		displayTransaction := new(displayTransaction)
-
-		transactionType := rawTransactionVerbose.Vout[0].ScriptPubKey.Type
+		transactionType := displayTransaction.RawTransactionVerbose.Vout[0].ScriptPubKey.Type
 
 		if transactionType == "stakesubmission" {
 			// Ticket Purchase
@@ -84,11 +56,13 @@ func handleTransaction(w http.ResponseWriter, r *http.Request, client *dcrrpccli
 		} else if transactionType == "stakerevoke" {
 			// Revocation
 			displayTransaction.Type = "Revocation"
-		} else if rawTransactionVerbose.Vout[2].ScriptPubKey.Type == "stakegen" {
+		} else if displayTransaction.RawTransactionVerbose.Vout[2].ScriptPubKey.Type == "stakegen" {
 			// Vote
 			displayTransaction.Type = "Vote"
 		}
 
-		t.Execute(w, rawTransactionVerbose)
+		displayTransaction.Time = time.Unix(displayTransaction.RawTransactionVerbose.Time, 0)
+
+		t.Execute(w, displayTransaction)
 	}
 }
