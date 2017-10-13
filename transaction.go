@@ -52,7 +52,7 @@ func handleTransaction(w http.ResponseWriter, r *http.Request, client *dcrrpccli
 			displayTransaction.Type = "Coinbase"
 		} else if transactionType == "pubkeyhash" {
 			// Regular Transaction
-			displayTransaction.Type = "Transaction"
+			displayTransaction.Type = "Regular Transaction"
 		} else if transactionType == "stakerevoke" {
 			// Revocation
 			displayTransaction.Type = "Revocation"
