@@ -41,6 +41,13 @@ table.alternating-colors > tbody > tr > td,
 table.alternating-colors > tbody > tr > th {
   padding: 10px;
 }
+table.nested-alternating > tbody > tr > td,
+table.nested-alternating > tbody > tr > th {
+  padding: 5px;
+}
+table.nested-alternating {
+    width: 100%;
+}
 table a:link {
     color: var(--decred-dark-blue);
     text-decoration: none;
@@ -57,6 +64,11 @@ th.tableTitle {
     text-transform: uppercase;
     letter-spacing: 2px;
     font-size: 18px;
+}
+th.nestedTableTitle {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
 }
 tbody td {
   overflow: hidden;
@@ -98,5 +110,14 @@ table.alternating-colors > tbody > tr:nth-child(even) {
     background-color: var(--decred-green);
 }
 table.alternating-colors > tbody > tr:hover {
+    background-color: var(--decred-orange);
+}
+table.nested-alternating > tbody > tr:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.255);
+}
+table.nested-alternating > tbody > tr:nth-child(even) {
+    background-color: rgba(128, 128, 128, 0.128);
+}
+table.nested-alternating > tbody > tr:hover {
     background-color: var(--decred-orange);
 }
