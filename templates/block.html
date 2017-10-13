@@ -186,7 +186,7 @@
                                 </colgroup>
                                 <tbody>
                                     <tr>
-                                        <td><a href="/transaction/{{ .TxID }}">{{ .TxID }}</td>
+                                        <td><a href="/transaction/{{ .TxID }}">{{ .TxID }}</a></td>
                                         <td>Version: {{ .Version }}</td>
                                     </tr>
                                     <tr>
@@ -218,7 +218,7 @@
                     <tbody>
                         {{ range .TicketPurchases }}
                         <tr>
-                            <td><a href="/transaction/{{ .TxID }}">{{ .TxID }}</td>
+                            <td><a href="/transaction/{{ .TxID }}">{{ .TxID }}</a></td>
                             <td>{{ .Maturity }}</td>
                         </tr>
                         {{ end }}
@@ -234,7 +234,7 @@
                     <tbody>
                         {{ range .Revocations }}
                         <tr>
-                            <td><a href="/transaction/{{ .TxID }}">{{ .TxID }}</td>
+                            <td><a href="/transaction/{{ .TxID }}">{{ .TxID }}</a></td>
                         </tr>
                         {{ end }}
                     </tbody>
