@@ -27,9 +27,8 @@
               <th class="tableTitle">{{ .Type }}</th>
           </thead>
           <tbody>
-              <tr><th>Hex:</th><td>{{ .RawTransactionVerbose.Hex }}</td></tr>
+              <tr><th>Raw Transaction Hex:</th><td>{{ .RawTransactionVerbose.Hex }}</td></tr>
               <tr><th>TxID:</th><td>{{ .RawTransactionVerbose.Txid }}</td></tr>
-              <tr><th>Version:</th><td>{{ .RawTransactionVerbose.Version }}</td></tr>
               {{ if .RawTransactionVerbose.LockTime }}
               <tr><th>LockTime:</th><td>{{ .RawTransactionVerbose.LockTime }}</td></tr>
               {{ end }}
@@ -98,11 +97,13 @@
                 <col class="col-right">
               </colgroup>
               <thead>
-                <th>Output #{{ $index }}</th>
+                <th class="nestedTableTitle">Output #{{ $index }}</th>
               </thead>
               <tbody>
-                <tr><th>Amount:</th><td>{{ .Value }}</td></tr>
-                <tr><th>Script ASM:</th><td>{{ .ScriptPubKey.Asm }}</td></tr>
+                {{ if .Value }}
+                  <tr><th>Amount:</th><td>{{ .Value }}</td></tr>
+                {{ end }}
+                <tr><th>Script:</th><td>{{ .ScriptPubKey.Asm }}</td></tr>
                 <tr><th>Script Hex:</th><td>{{ .ScriptPubKey.Hex }}</td></tr>
                 {{ if (.ScriptPubKey.Addresses) }}
                 <tr>
@@ -114,6 +115,7 @@
                   </td>
                 </tr>
                 {{ end }}
+                <tr><td>{{ . }}</td></tr>
               </tbody>
             </table>
           </td></tr>
