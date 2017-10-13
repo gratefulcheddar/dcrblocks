@@ -24,6 +24,7 @@
           </colgroup>
           <thead>
               <th class="tableTitle">Transaction Summary:</th>
+              <th class="tableTitle">{{ .Type }}</th>
           </thead>
           <tbody>
               <tr><th>Hex:</th><td>{{ .RawTransactionVerbose.Hex }}</td></tr>
@@ -55,9 +56,21 @@
           <tbody>
           {{ range $index, $output := .RawTransactionVerbose.Vin }}
           <tr><td colspan="2">
-            <table id="txnInputDetailTable">
-              <thead><th>Input #{{ $index }}</th></thead>
-              <tbody><tr><td> {{ . }}</td></tr></tbody>
+            <table id="txnInputDetailTable" class="nested-alternating">
+              <colgroup>
+                <col class="col-left">
+                <col class="col-right">
+              </colgroup>
+              <thead>
+                <th class="nestedTableTitle">Input #{{ $index }}:</th>
+              </thead>
+              <tbody>
+                <tr><th>Amount:</th><td>{{ .AmountIn }}</td></tr>
+                <tr>
+                  <th>From:</th>
+                  <td>Output #{{ .Vout }} of Transaction <a href="/transaction/{{ .Txid }}">{{ .Txid }}</a></td>
+                </tr>
+              </tbody>
             </table>
           </td></tr>
           {{ end }}
@@ -79,9 +92,29 @@
           <tbody>
           {{ range $index, $output := .RawTransactionVerbose.Vout }}
           <tr><td colspan="2">
-            <table id="txnOutputDetailTable">
-              <thead><th>Output #{{ $index }}</th></thead>
-              <tbody><tr><td> {{ . }}</td></tr></tbody>
+            <table id="txnOutputDetailTable" class="nested-alternating">
+              <colgroup>
+                <col class="col-left">
+                <col class="col-right">
+              </colgroup>
+              <thead>
+                <th>Output #{{ $index }}</th>
+              </thead>
+              <tbody>
+                <tr><th>Amount:</th><td>{{ .Value }}</td></tr>
+                <tr><th>Script ASM:</th><td>{{ .ScriptPubKey.Asm }}</td></tr>
+                <tr><th>Script Hex:</th><td>{{ .ScriptPubKey.Hex }}</td></tr>
+                {{ if (.ScriptPubKey.Addresses) }}
+                <tr>
+                  <th>Receiving Address(es):</th>
+                  <td>
+                    {{ range .ScriptPubKey.Addresses }}
+                      {{ . }}<br/>
+                    {{ end }}
+                  </td>
+                </tr>
+                {{ end }}
+              </tbody>
             </table>
           </td></tr>
           {{ end }}
