@@ -1,5 +1,10 @@
 table#txnSummaryTable .col-left {
-  width: 15%;
+  width: 25%;
+}
+table#txnSummaryTable td {
+  overflow: scroll;
+  overflow-wrap: break-word;
+  text-overflow: initial;
 }
 table.nested-alternating {
   width: 100%;
