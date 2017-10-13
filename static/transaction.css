@@ -1,3 +1,12 @@
 table#txnSummaryTable .col-left {
   width: 15%;
 }
+table.nested-alternating {
+  width: 100%;
+}
+table#txnInputDetailTable .col-left {
+  width: 15%;
+}
+table#txnOutputDetailTable .col-left {
+  width: 15%;
+}
