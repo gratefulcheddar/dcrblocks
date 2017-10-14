@@ -17,3 +17,6 @@ table#txnInputDetailTable .col-left {
 table#txnOutputDetailTable .col-left {
   width: 15%;
 }
+span.voteButton {
+  margin-left: 4px;
+}
