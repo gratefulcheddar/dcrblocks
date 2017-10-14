@@ -50,9 +50,13 @@ type regular struct {
 }
 
 type vote struct {
-	Votes   map[string]string
-	TxID    string
+	TxID       string
+	VoteResult *parsedVote
+}
+
+type parsedVote struct {
 	Version string
+	Votes   map[string]string
 }
 
 type ticketPurchase struct {
@@ -181,79 +185,86 @@ func parseBlock(block *dcrjson.GetBlockVerboseResult, blockSubsidy *dcrjson.GetB
 		} else {
 			vote := new(vote)
 			vote.TxID = block.RawSTx[i].Txid
-			vote.Votes = make(map[string]string)
 			// Parse Vote - TODO: Make this automatic
 			if len(block.RawSTx[i].Vout[1].ScriptPubKey.Hex) > 8 {
-				switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[8:10] {
-				case "04":
-					vote.Version = "4"
-					switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[4:6] {
-					case "00":
-						fallthrough
-					case "01":
-						vote.Votes["lnsupport"] = "abstain"
-						vote.Votes["sdiffalgo"] = "abstain"
-					case "02":
-						fallthrough
-					case "03":
-						vote.Votes["lnsupport"] = "abstain"
-						vote.Votes["sdiffalgo"] = "no"
-					case "04":
-						fallthrough
-					case "05":
-						vote.Votes["lnsupport"] = "abstain"
-						vote.Votes["sdiffalgo"] = "yes"
-					case "08":
-						fallthrough
-					case "09":
-						vote.Votes["lnsupport"] = "no"
-						vote.Votes["sdiffalgo"] = "abstain"
-					case "0a":
-						fallthrough
-					case "0b":
-						vote.Votes["lnsupport"] = "no"
-						vote.Votes["sdiffalgo"] = "no"
-					case "0c":
-						fallthrough
-					case "0d":
-						vote.Votes["lnsupport"] = "no"
-						vote.Votes["sdiffalgo"] = "yes"
-					case "10":
-						fallthrough
-					case "11":
-						vote.Votes["lnsupport"] = "yes"
-						vote.Votes["sdiffalgo"] = "abstain"
-					case "12":
-						fallthrough
-					case "13":
-						vote.Votes["lnsupport"] = "yes"
-						vote.Votes["sdiffalgo"] = "no"
-					case "14":
-						fallthrough
-					case "15":
-						vote.Votes["lnsupport"] = "yes"
-						vote.Votes["sdiffalgo"] = "yes"
-					}
-				case "05":
-					vote.Version = "5"
-					switch block.RawSTx[i].Vout[1].ScriptPubKey.Hex[4:6] {
-					case "00":
-						fallthrough
-					case "01":
-						vote.Votes["lnfeatures"] = "abstain"
-					case "02":
-						fallthrough
-					case "03":
-						vote.Votes["lnfeatures"] = "no"
-					case "04":
-						fallthrough
-					case "05":
-						vote.Votes["lnfeatures"] = "yes"
-					}
-				}
+				vote.VoteResult = parseVoteScript(block.RawSTx[i].Vout[1].ScriptPubKey.Hex)
 			}
 			displayBlock.Votes = append(displayBlock.Votes, *vote)
 		}
 	}
 	return displayBlock
+}
+
+func parseVoteScript(scriptPubKeyHex string) *parsedVote {
+	voteResults := new(parsedVote)
+
+	voteResults.Votes = make(map[string]string)
+	switch scriptPubKeyHex[8:10] {
+	case "04":
+		voteResults.Version = "4"
+		switch scriptPubKeyHex[4:6] {
+		case "00":
+			fallthrough
+		case "01":
+			voteResults.Votes["lnsupport"] = "abstain"
+			voteResults.Votes["sdiffalgo"] = "abstain"
+		case "02":
+			fallthrough
+		case "03":
+			voteResults.Votes["lnsupport"] = "abstain"
+			voteResults.Votes["sdiffalgo"] = "no"
+		case "04":
+			fallthrough
+		case "05":
+			voteResults.Votes["lnsupport"] = "abstain"
+			voteResults.Votes["sdiffalgo"] = "yes"
+		case "08":
+			fallthrough
+		case "09":
+			voteResults.Votes["lnsupport"] = "no"
+			voteResults.Votes["sdiffalgo"] = "abstain"
+		case "0a":
+			fallthrough
+		case "0b":
+			voteResults.Votes["lnsupport"] = "no"
+			voteResults.Votes["sdiffalgo"] = "no"
+		case "0c":
+			fallthrough
+		case "0d":
+			voteResults.Votes["lnsupport"] = "no"
+			voteResults.Votes["sdiffalgo"] = "yes"
+		case "10":
+			fallthrough
+		case "11":
+			voteResults.Votes["lnsupport"] = "yes"
+			voteResults.Votes["sdiffalgo"] = "abstain"
+		case "12":
+			fallthrough
+		case "13":
+			voteResults.Votes["lnsupport"] = "yes"
+			voteResults.Votes["sdiffalgo"] = "no"
+		case "14":
+			fallthrough
+		case "15":
+			voteResults.Votes["lnsupport"] = "yes"
+			voteResults.Votes["sdiffalgo"] = "yes"
+		}
+	case "05":
+		voteResults.Version = "5"
+		switch scriptPubKeyHex[4:6] {
+		case "00":
+			fallthrough
+		case "01":
+			voteResults.Votes["lnfeatures"] = "abstain"
+		case "02":
+			fallthrough
+		case "03":
+			voteResults.Votes["lnfeatures"] = "no"
+		case "04":
+			fallthrough
+		case "05":
+			voteResults.Votes["lnfeatures"] = "yes"
+		}
+	}
+	return voteResults
 }
