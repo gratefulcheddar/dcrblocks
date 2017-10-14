@@ -1,7 +1,9 @@
 table#txnSummaryTable .col-left {
   width: 25%;
 }
-table#txnSummaryTable td {
+table#txnSummaryTable td,
+table#txnInputDetailTable td,
+table#txnOutputDetailTable td {
   overflow: scroll;
   overflow-wrap: break-word;
   text-overflow: initial;
