@@ -174,7 +174,7 @@
                     </colgroup>
                     <thead>
                         <th class="tableTitle">Votes:</th>
-                        <th class="tableTitle">{{ .VoteReward }} DCR Reward</th>
+                        <th class="tableTitle">{{ printf "%9.8f" .VoteReward }} DCR Reward</th>
                     </thead>
                     <tbody>
                         {{ range .Votes }}
@@ -185,19 +185,26 @@
                                     <col class="col-right">
                                 </colgroup>
                                 <tbody>
+                                    {{ if .VoteResult.Votes }}
+                                        <tr>
+                                            <td><a href="/transaction/{{ .TxID }}">{{ .TxID }}</a></td>
+                                            <td>Version: {{ .VoteResult.Version }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="voteRow">
+                                                {{ range $key, $value :=    .VoteResult.Votes }}
+                                                <span class="voteButton">
+                                                    {{ $key }}: {{ $value   }}
+                                                </span>
+                                                {{ end }}
+                                            </td>
+                                        </tr>
+                                    {{ else }}
                                     <tr>
-                                        <td><a href="/transaction/{{ .TxID }}">{{ .TxID }}</a></td>
-                                        <td>Version: {{ .VoteResult.Version }}</td>
+                                            <td style="padding-bottom:10px"><a href="/transaction/{{ .TxID }}">{{ .TxID }}</a></td>
+                                            <td style="padding-bottom:10px">Version: {{ .VoteResult.Version }}</td>
                                     </tr>
-                                    <tr>
-                                        <td colspan="2" class="voteRow">
-                                            {{ range $key, $value := .VoteResult.Votes }}
-                                            <span class="voteButton">
-                                                {{ $key }}: {{ $value }}
-                                            </span>
-                                            {{ end }}
-                                        </td>
-                                    </tr>
+                                    {{ end }}
                                 </tbody>
                             </table>
                         </td></tr>
