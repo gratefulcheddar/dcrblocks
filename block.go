@@ -185,10 +185,7 @@ func parseBlock(block *dcrjson.GetBlockVerboseResult, blockSubsidy *dcrjson.GetB
 		} else {
 			vote := new(vote)
 			vote.TxID = block.RawSTx[i].Txid
-			// Parse Vote - TODO: Make this automatic
-			if len(block.RawSTx[i].Vout[1].ScriptPubKey.Hex) > 8 {
-				vote.VoteResult = parseVoteScript(block.RawSTx[i].Vout[1].ScriptPubKey.Hex)
-			}
+			vote.VoteResult = parseVoteScript(block.RawSTx[i].Vout[1].ScriptPubKey.Hex)
 			displayBlock.Votes = append(displayBlock.Votes, *vote)
 		}
 	}
@@ -198,73 +195,77 @@ func parseBlock(block *dcrjson.GetBlockVerboseResult, blockSubsidy *dcrjson.GetB
 func parseVoteScript(scriptPubKeyHex string) *parsedVote {
 	voteResults := new(parsedVote)
 
-	voteResults.Votes = make(map[string]string)
-	switch scriptPubKeyHex[8:10] {
-	case "04":
-		voteResults.Version = "4"
-		switch scriptPubKeyHex[4:6] {
-		case "00":
-			fallthrough
-		case "01":
-			voteResults.Votes["lnsupport"] = "abstain"
-			voteResults.Votes["sdiffalgo"] = "abstain"
-		case "02":
-			fallthrough
-		case "03":
-			voteResults.Votes["lnsupport"] = "abstain"
-			voteResults.Votes["sdiffalgo"] = "no"
+	if len(scriptPubKeyHex) > 8 {
+		voteResults.Votes = make(map[string]string)
+		switch scriptPubKeyHex[8:10] {
 		case "04":
-			fallthrough
+			voteResults.Version = "4"
+			switch scriptPubKeyHex[4:6] {
+			case "00":
+				fallthrough
+			case "01":
+				voteResults.Votes["lnsupport"] = "abstain"
+				voteResults.Votes["sdiffalgo"] = "abstain"
+			case "02":
+				fallthrough
+			case "03":
+				voteResults.Votes["lnsupport"] = "abstain"
+				voteResults.Votes["sdiffalgo"] = "no"
+			case "04":
+				fallthrough
+			case "05":
+				voteResults.Votes["lnsupport"] = "abstain"
+				voteResults.Votes["sdiffalgo"] = "yes"
+			case "08":
+				fallthrough
+			case "09":
+				voteResults.Votes["lnsupport"] = "no"
+				voteResults.Votes["sdiffalgo"] = "abstain"
+			case "0a":
+				fallthrough
+			case "0b":
+				voteResults.Votes["lnsupport"] = "no"
+				voteResults.Votes["sdiffalgo"] = "no"
+			case "0c":
+				fallthrough
+			case "0d":
+				voteResults.Votes["lnsupport"] = "no"
+				voteResults.Votes["sdiffalgo"] = "yes"
+			case "10":
+				fallthrough
+			case "11":
+				voteResults.Votes["lnsupport"] = "yes"
+				voteResults.Votes["sdiffalgo"] = "abstain"
+			case "12":
+				fallthrough
+			case "13":
+				voteResults.Votes["lnsupport"] = "yes"
+				voteResults.Votes["sdiffalgo"] = "no"
+			case "14":
+				fallthrough
+			case "15":
+				voteResults.Votes["lnsupport"] = "yes"
+				voteResults.Votes["sdiffalgo"] = "yes"
+			}
 		case "05":
-			voteResults.Votes["lnsupport"] = "abstain"
-			voteResults.Votes["sdiffalgo"] = "yes"
-		case "08":
-			fallthrough
-		case "09":
-			voteResults.Votes["lnsupport"] = "no"
-			voteResults.Votes["sdiffalgo"] = "abstain"
-		case "0a":
-			fallthrough
-		case "0b":
-			voteResults.Votes["lnsupport"] = "no"
-			voteResults.Votes["sdiffalgo"] = "no"
-		case "0c":
-			fallthrough
-		case "0d":
-			voteResults.Votes["lnsupport"] = "no"
-			voteResults.Votes["sdiffalgo"] = "yes"
-		case "10":
-			fallthrough
-		case "11":
-			voteResults.Votes["lnsupport"] = "yes"
-			voteResults.Votes["sdiffalgo"] = "abstain"
-		case "12":
-			fallthrough
-		case "13":
-			voteResults.Votes["lnsupport"] = "yes"
-			voteResults.Votes["sdiffalgo"] = "no"
-		case "14":
-			fallthrough
-		case "15":
-			voteResults.Votes["lnsupport"] = "yes"
-			voteResults.Votes["sdiffalgo"] = "yes"
+			voteResults.Version = "5"
+			switch scriptPubKeyHex[4:6] {
+			case "00":
+				fallthrough
+			case "01":
+				voteResults.Votes["lnfeatures"] = "abstain"
+			case "02":
+				fallthrough
+			case "03":
+				voteResults.Votes["lnfeatures"] = "no"
+			case "04":
+				fallthrough
+			case "05":
+				voteResults.Votes["lnfeatures"] = "yes"
+			}
 		}
-	case "05":
-		voteResults.Version = "5"
-		switch scriptPubKeyHex[4:6] {
-		case "00":
-			fallthrough
-		case "01":
-			voteResults.Votes["lnfeatures"] = "abstain"
-		case "02":
-			fallthrough
-		case "03":
-			voteResults.Votes["lnfeatures"] = "no"
-		case "04":
-			fallthrough
-		case "05":
-			voteResults.Votes["lnfeatures"] = "yes"
-		}
+	} else {
+		voteResults.Version = "0"
 	}
 	return voteResults
 }
