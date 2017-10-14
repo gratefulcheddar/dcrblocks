@@ -52,3 +52,6 @@ table#blockVoteDetailTable .col-left {
 table#blockTicketTable .col-left {
   width: 83%
 }
+span.voteButton {
+  margin-right: 4px;
+}
