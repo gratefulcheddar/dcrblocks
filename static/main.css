@@ -43,7 +43,7 @@ table.alternating-colors > tbody > tr > th {
 }
 table.nested-alternating > tbody > tr > td,
 table.nested-alternating > tbody > tr > th {
-  padding: 5px;
+  padding: 10px;
 }
 table.nested-alternating {
     width: 100%;
