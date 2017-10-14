@@ -15,6 +15,7 @@ type displayTransaction struct {
 	RawTransactionVerbose *dcrjson.TxRawResult
 	Time                  time.Time
 	Type                  string
+	Votes                 *parsedVote
 }
 
 func handleTransaction(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Client) {
@@ -59,6 +60,7 @@ func handleTransaction(w http.ResponseWriter, r *http.Request, client *dcrrpccli
 		} else if displayTransaction.RawTransactionVerbose.Vout[2].ScriptPubKey.Type == "stakegen" {
 			// Vote
 			displayTransaction.Type = "Vote"
+			displayTransaction.Votes = parseVoteScript(displayTransaction.RawTransactionVerbose.Vout[1].ScriptPubKey.Hex)
 		}
 
 		displayTransaction.Time = time.Unix(displayTransaction.RawTransactionVerbose.Time, 0)
