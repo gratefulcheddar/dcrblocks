@@ -60,6 +60,24 @@
                 <th>Received Time:</th>
                 <td>{{ .Time }}</td>
               </tr>
+              {{ if .Votes }}
+                <tr>
+                  <th>Vote Version:</th>
+                  <td>{{ .Votes.Version }}</td>
+                </tr>
+                {{ if .Votes.Votes }}
+                  <tr>
+                    <th>Vote Results:</th>
+                    <td>
+                      {{ range $key, $value := .Votes.Votes }}
+                        <span class="voteButton">
+                          {{ $key }}: {{ $value }}
+                        </span>
+                      {{ end }}
+                    </td>
+                  </tr>
+                {{ end }}
+              {{ end }}
           </tbody>
         </table>
       </div>
