@@ -187,11 +187,11 @@
                                 <tbody>
                                     <tr>
                                         <td><a href="/transaction/{{ .TxID }}">{{ .TxID }}</a></td>
-                                        <td>Version: {{ .Version }}</td>
+                                        <td>Version: {{ .VoteResult.Version }}</td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="voteRow">
-                                            {{ range $key, $value := .Votes }}
+                                            {{ range $key, $value := .VoteResult.Votes }}
                                             <span class="voteButton">
                                                 {{ $key }}: {{ $value }}
                                             </span>
