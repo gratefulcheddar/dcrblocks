@@ -9,6 +9,7 @@
     </title>
   </head>
   <body>
+    {{ $transactionType := .Type }}
     <section class="container">
       <div class="pageHeader">
         <a href="/" class="pageTitle">DCRBLOCKS</a>
@@ -24,7 +25,7 @@
           </colgroup>
           <thead>
               <th class="tableTitle">Transaction Summary:</th>
-              <th class="tableTitle">{{ .Type }}</th>
+              <th class="tableTitle">{{ $transactionType }}</th>
           </thead>
           <tbody>
               <tr>
@@ -126,6 +127,12 @@
               </colgroup>
               <thead>
                 <th class="nestedTableTitle">Output #{{ $index }}</th>
+                {{ if eq .ScriptPubKey.Hex "a914f5916158e3e2c4551c1796708db8367207ed13bb87" }}
+                  <th class="nestedTableTitle">Developer Subsidy</th>
+                {{ end }}
+                {{ if and (eq $transactionType "Coinbase") (eq $index 2)}}
+                  <th class="nestedTableTitle">Miner Reward</th>
+                {{ end }}
               </thead>
               <tbody>
                 {{ if .Value }}
