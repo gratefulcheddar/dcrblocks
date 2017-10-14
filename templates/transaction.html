@@ -88,16 +88,17 @@
               <tbody>
                 <tr>
                   <th>Amount:</th>
-                  <td>{{ .AmountIn }}</td>
+                  <td>{{ .AmountIn }} DCR</td>
                 </tr>
                 <tr>
                   <th>From:</th>
                   {{ if .Txid }}
                     <td>Output #{{ .Vout }} of Transaction <a href="/transaction/{{ .Txid }}">{{ .Txid }}</a></td>
                   {{ else }}
-                    <td>Block Subsidy</td>
+                    <td>Block Subsidy (NEW!)</td>
                   {{ end }}
                 </tr>
+                <tr><td colspan="2">{{ . }}</td></tr>
               </tbody>
             </table>
           </td></tr>
@@ -136,10 +137,10 @@
               </thead>
               <tbody>
                 {{ if .Value }}
-                  <tr><th>Amount:</th><td>{{ .Value }}</td></tr>
+                  <tr><th>Amount:</th><td>{{ .Value }} DCR</td></tr>
                 {{ end }}
-                <tr><th>Script:</th><td>{{ .ScriptPubKey.Asm }}</td></tr>
                 <tr><th>Script Hex:</th><td>{{ .ScriptPubKey.Hex }}</td></tr>
+                <tr><th>ASM:</th><td>{{ .ScriptPubKey.Asm }}</td></tr>
                 {{ if (.ScriptPubKey.Addresses) }}
                 <tr>
                   <th>Receiving Address(es):</th>
@@ -150,7 +151,7 @@
                   </td>
                 </tr>
                 {{ end }}
-                <tr><td>{{ . }}</td></tr>
+                <tr><td colspan="2">{{ . }}</td></tr>
               </tbody>
             </table>
           </td></tr>
