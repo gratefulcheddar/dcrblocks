@@ -19,7 +19,7 @@ type displayTransaction struct {
 }
 
 func handleTransaction(w http.ResponseWriter, r *http.Request, client *rpcclient.Client) {
-	t, err := template.ParseFiles("templates/transaction.html")
+	t, err := template.ParseFiles("templates/transaction.html", "templates/partial_head.html")
 	if err != nil {
 		log.Fatal(err)
 	}

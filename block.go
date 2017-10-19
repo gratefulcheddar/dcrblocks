@@ -97,7 +97,7 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *rpcclient.Clien
 			}
 
 			// Parse the block.html template
-			t, err := template.ParseFiles("templates/block.html")
+			t, err := template.ParseFiles("templates/block.html", "templates/partial_head.html")
 			if err != nil {
 				log.Fatal(err)
 			}
