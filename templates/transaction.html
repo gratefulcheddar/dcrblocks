@@ -157,7 +157,7 @@
                   <tr><th>Amount:</th><td>{{ .Value }} DCR</td></tr>
                 {{ end }}
                 <tr><th>Script Hex:</th><td>{{ .ScriptPubKey.Hex }}</td></tr>
-                <tr><th>ASM:</th><td>{{ .ScriptPubKey.Asm }}</td></tr>
+                <tr><th>Decoded Script:</th><td>{{ .ScriptPubKey.Asm }}</td></tr>
                 {{ if (.ScriptPubKey.Addresses) }}
                 <tr>
                   <th>Receiving Address(es):</th>
