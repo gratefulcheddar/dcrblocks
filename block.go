@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/decred/dcrd/dcrjson"
-	"github.com/decred/dcrrpcclient"
+	"github.com/decred/dcrd/rpcclient"
 )
 
 type displayBlock struct {
@@ -68,7 +68,7 @@ type revocation struct {
 	TxID string
 }
 
-func handleBlock(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Client) {
+func handleBlock(w http.ResponseWriter, r *http.Request, client *rpcclient.Client) {
 
 	// Reads the block number as a string from the URL Path
 	inputBlockStr := r.URL.Path[7:]

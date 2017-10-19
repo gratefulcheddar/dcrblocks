@@ -11,14 +11,14 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/decred/dcrrpcclient"
+	"github.com/decred/dcrd/rpcclient"
 	"github.com/decred/dcrutil"
 )
 
-// makeHandler creates a new dcrrpcclient, passes it to the
+// makeHandler creates a new rpcclient, passes it to the
 // input function for executing, shuts down the client,
 // and returns an http.HandlerFunc to use with http.HandleFunc()
-func makeHandler(fn func(http.ResponseWriter, *http.Request, *dcrrpcclient.Client)) http.HandlerFunc {
+func makeHandler(fn func(http.ResponseWriter, *http.Request, *rpcclient.Client)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		// Connect to local dcrd RPC server using websockets.
@@ -27,14 +27,14 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, *dcrrpcclient.Clien
 		if err != nil {
 			log.Fatal(err)
 		}
-		connCfg := &dcrrpcclient.ConnConfig{
+		connCfg := &rpcclient.ConnConfig{
 			Host:         "localhost:9109",
 			Endpoint:     "ws",
 			User:         "cheesepool",
 			Pass:         "dcrblocks",
 			Certificates: certs,
 		}
-		client, err := dcrrpcclient.New(connCfg, nil)
+		client, err := rpcclient.New(connCfg, nil)
 		if err != nil {
 			log.Fatal(err)
 		}

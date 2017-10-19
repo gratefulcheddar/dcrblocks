@@ -8,7 +8,7 @@ import (
 
 	"github.com/decred/dcrd/chaincfg/chainhash"
 	"github.com/decred/dcrd/dcrjson"
-	"github.com/decred/dcrrpcclient"
+	"github.com/decred/dcrd/rpcclient"
 )
 
 type displayTransaction struct {
@@ -18,7 +18,7 @@ type displayTransaction struct {
 	Votes                 *parsedVote
 }
 
-func handleTransaction(w http.ResponseWriter, r *http.Request, client *dcrrpcclient.Client) {
+func handleTransaction(w http.ResponseWriter, r *http.Request, client *rpcclient.Client) {
 	t, err := template.ParseFiles("templates/transaction.html")
 	if err != nil {
 		log.Fatal(err)
