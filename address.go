@@ -14,7 +14,7 @@ type displayAddress struct {
 	SearchRawTransactionsResult []*dcrjson.SearchRawTransactionsResult
 }
 
-func handleBlock(w http.ResponseWriter, r *http.Request, client *rpcclient.Client) {
+func handleAddress(w http.ResponseWriter, r *http.Request, client *rpcclient.Client) {
 
 	t, err := template.ParseFiles("templates/address.html", "templates/partial_head.html")
 	if err != nil {

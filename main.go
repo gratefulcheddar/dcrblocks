@@ -57,6 +57,7 @@ func main() {
 
 	http.HandleFunc("/block/", makeHandler(handleBlock))
 	http.HandleFunc("/transaction/", makeHandler(handleTransaction))
+	http.HandleFunc("/address/", makeHandler(handleAddress))
 	http.HandleFunc("/", makeHandler(handleIndex))
 	log.Printf("Server started. Address = %v", server.Addr)
 	server.ListenAndServe()
