@@ -162,7 +162,7 @@
                   <th>Receiving Address(es):</th>
                   <td>
                     {{ range .ScriptPubKey.Addresses }}
-                      {{ . }}<br/>
+                      <a href="/address/{{ . }}">{{ . }}</a><br/>
                     {{ end }}
                   </td>
                 </tr>
