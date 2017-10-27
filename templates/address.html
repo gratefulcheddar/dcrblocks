@@ -8,6 +8,26 @@
         </title>
     </head>
     <body>
-        {{ . }}
+        {{ range . }}
+        Hex: {{ .Hex }}<br />
+        TxID: {{ .Txid }}<br />
+        Version: {{ .Version }}<br />
+        LockTime: {{ .LockTime }}<br />
+        Inputs: {{ range .Vin }}{{ . }}<br />{{ end }}
+        Outputs: {{ range .Vout }}{{ . }}<br />{{ end }}
+        {{ if .BlockHash }}
+        BlockHash: {{ .BlockHash }}<br />
+        {{ end }}
+        {{ if .Confirmations }}
+        Confirmations: {{ .Confirmations }}<br />
+        {{ end }}    
+        {{ if .Time }}
+        Time: {{ .Time }}<br />
+        {{ end }}
+        {{ if .Blocktime }}
+        Blocktime: {{ .Blocktime }}<br />
+        {{ end }}     
+        <br />
+        {{ end }}
     </body>
 </html>
