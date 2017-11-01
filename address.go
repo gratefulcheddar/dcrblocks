@@ -12,6 +12,10 @@ import (
 
 type displayAddress struct {
 	SearchRawTransactionsResult []*dcrjson.SearchRawTransactionsResult
+	TransactionCount            int
+	TotalSent                   float64
+	TotalReceived               float64
+	FinalBalance                float64
 }
 
 func handleAddress(w http.ResponseWriter, r *http.Request, client *rpcclient.Client) {
