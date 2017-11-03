@@ -20,7 +20,7 @@ type displayAddress struct {
 
 func handleAddress(w http.ResponseWriter, r *http.Request, client *rpcclient.Client) {
 
-	t, err := template.ParseFiles("templates/address.html", "templates/partial_head.html")
+	t, err := template.ParseFiles("templates/address.html", "templates/partial_head.html", "templates/vin_table.html")
 	if err != nil {
 		log.Fatal(err)
 	}

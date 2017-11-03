@@ -9,11 +9,14 @@
     </head>
     <body>
         {{ range .SearchRawTransactionsResult }}
+
         Hex: {{ .Hex }}<br />
         TxID: {{ .Txid }}<br />
         Version: {{ .Version }}<br />
         LockTime: {{ .LockTime }}<br />
-        Inputs: {{ range .Vin }}{{ . }}<br />{{ end }}
+        
+        {{ template "vin_table" .Vin }}
+
         Outputs: {{ range .Vout }}{{ . }}<br />{{ end }}
         {{ if .BlockHash }}
         BlockHash: {{ .BlockHash }}<br />

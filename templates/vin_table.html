@@ -1,0 +1,46 @@
+<!-- 
+  Displays all of the transaction inputs. Used by address.html and transaction.html. 
+  INPUT: type Vin or VinPrevOut
+-->
+{{ block "vin_table" . }}
+<div>
+  <table id="txnInputsTable" class="alternating-colors">
+    <colgroup>
+      <col class="col-left">
+      <col class="col-right">
+    </colgroup>
+    <thead>
+      <th class="tableTitle">Transaction Inputs:</th>
+    </thead>
+    <tbody>
+    {{ range $index, $output := . }}
+    <tr><td colspan="2">
+      <table id="txnInputDetailTable" class="nested-alternating">
+        <colgroup>
+          <col class="col-left">
+          <col class="col-right">
+        </colgroup>
+        <thead>
+          <th class="nestedTableTitle">Input #{{ $index }}:</th>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Amount:</th>
+            <td>{{ .AmountIn }} DCR</td>
+          </tr>
+          <tr>
+            <th>From:</th>
+            {{ if .Txid }}
+              <td>Output #{{ .Vout }} of Transaction <a href="/transaction/{{ .Txid }}">{{ .Txid }}</a></td>
+            {{ else }}
+              <td>Block Subsidy (NEW!)</td>
+            {{ end }}
+          </tr>
+        </tbody>
+      </table>
+    </td></tr>
+    {{ end }}
+    </tbody>
+  </table>
+</div>
+{{ end }}
