@@ -39,7 +39,6 @@ func handleAddress(w http.ResponseWriter, r *http.Request, client *rpcclient.Cli
 			log.Fatal(err)
 		}
 
-		t.Execute(w, displayAddress.SearchRawTransactionsResult)
-
+		t.Execute(w, displayAddress)
 	}
 }
