@@ -1,0 +1,15 @@
+table#addressSummaryTable .col-left {
+  width: 20%;
+}
+table.addressTable .col-left {
+  width: 25%;
+}
+table.addressTable .col-middle {
+  width: 65%;
+}
+table.addressTable .col-middle th {
+  text-align: right;
+}
+.rightColumn {
+  text-align: right;
+}

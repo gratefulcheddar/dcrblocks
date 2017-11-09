@@ -3,34 +3,90 @@
     <head>
         {{ template "partial_head" }}
         <link rel="stylesheet" href="/static/address.css" type='text/css'>
+        <link rel="stylesheet" href="/static/transaction.css" type='text/css'>
         <title>
-            Decred Address 
+            Decred Address {{ .AddressString }}
         </title>
     </head>
     <body>
-        {{ range .SearchRawTransactionsResult }}
+      <section class="container">
+        <div class="pageHeader">
+          <a href="/"  class="pageTitle">DCRBLOCKS</a>
+          <span class="subTitle">by cheesepool.org</span>
+        </div>
+      </section>
+      <section class="container">
+        <table id="addressSummaryTable" class="alternating-colors">
+          <colgroup>
+            <col class="col-left">
+            <col class="col-right">
+          </colgroup>
+          <thead>
+            <th class="tableTitle">Address:</th>
+            <th class="tableTitle"><span style="text-transform:none">{{ .AddressString }}</span></th>
+          </thead>
+          <tbody>
+            <tr><th>Total DCR Received:</th><td>{{ .TotalReceived }}</td></tr>
+            <tr><th>Total DCR Sent:</th><td>{{ .TotalSent }}</td></tr>
+            <tr><th>Current Balance:</th><td>{{ .FinalBalance }}</td></tr>
+            <tr><th>Number of Transactions:</th><td>{{ .TransactionCount }}</td></tr>
+          </tbody>
+        </table>
 
-        Hex: {{ .Hex }}<br />
-        TxID: {{ .Txid }}<br />
-        Version: {{ .Version }}<br />
-        LockTime: {{ .LockTime }}<br />
-        
-        {{ template "vin_table" .Vin }}
+        {{ if .Sent }}
+        <table id="addressSentTable" class="alternating-colors addressTable">
+          <colgroup>
+            <col class="col-left">
+            <col class="col-middle">
+            <col class="col-right">
+          </colgroup>
+          <thead>
+            <tr><th class="tableTitle">DCR Sent</th></tr>
+          </thead>
+          <tbody> 
+            <tr>
+              <th>Amount:</th>
+              <th>Included in Transaction:</th>
+              <th class="rightColumn">Block:</th>
+            </tr>    
+            {{ range .Sent }}   
+            <tr>
+              <td>{{ .Amount }}</td>
+              <td><a href="/transaction/{{ .Txid }}">{{ .Txid }}</a></td>
+              <td class="rightColumn"><a href="/block/{{ .BlockHeight }}">{{ .BlockHeight }}</a></td>
+            </tr>
+            {{ end }}
+        </tbody>
+        </table>
+        {{ end }}
 
-        Outputs: {{ range .Vout }}{{ . }}<br />{{ end }}
-        {{ if .BlockHash }}
-        BlockHash: {{ .BlockHash }}<br />
+        {{ if .Received }}
+        <table id="addressSentTable" class="alternating-colors addressTable">
+          <colgroup>
+            <col class="col-left">
+            <col class="col-middle">
+            <col class="col-right">
+          </colgroup>
+          <thead>
+            <tr><th class="tableTitle">DCR Recieved</th></tr>
+          </thead>
+          <tbody> 
+            <tr>
+              <th>Amount:</th>
+              <th>Included in Transaction:</th>
+              <th class="rightColumn">Block:</th>
+            </tr>
+            {{ range .Received }}   
+            <tr>
+              <td>{{ .Amount }}</td>
+              <td><a href="/transaction/{{ .Txid }}">{{ .Txid }}</a></td>
+              <td class="rightColumn"><a href="/block/{{ .BlockHeight }}">{{ .BlockHeight }}</a></td>
+            </tr>
+            {{ end }}
+        </tbody>
+        </table>
         {{ end }}
-        {{ if .Confirmations }}
-        Confirmations: {{ .Confirmations }}<br />
-        {{ end }}    
-        {{ if .Time }}
-        Time: {{ .Time }}<br />
-        {{ end }}
-        {{ if .Blocktime }}
-        Blocktime: {{ .Blocktime }}<br />
-        {{ end }}     
-        <br />
-        {{ end }}
+
+        </section>
     </body>
 </html>
