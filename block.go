@@ -263,6 +263,12 @@ func parseVoteScript(scriptPubKeyHex string) *parsedVote {
 			case "05":
 				voteResults.Votes["lnfeatures"] = "yes"
 			}
+		default:
+			if scriptPubKeyHex[8:9] == "0" {
+				voteResults.Version = scriptPubKeyHex[9:10]
+			} else {
+				voteResults.Version = scriptPubKeyHex[8:10]
+			}
 		}
 	} else {
 		voteResults.Version = "0"
