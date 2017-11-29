@@ -84,7 +84,7 @@ func handleBlock(w http.ResponseWriter, r *http.Request, client *rpcclient.Clien
 		if err != nil {
 			log.Fatal(err)
 		}
-
+		// http.Redirect(w ResponseWriter, r *Request, url string, code int)
 		// Check that input block is valid
 		if inputBlockInt64 > currentBlockHeight {
 			w.Write([]byte("Error: Input block exceeds current chain height."))
