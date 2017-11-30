@@ -17,10 +17,33 @@
       <div>
         <table class="indexTable">
           <thead>
-
+            <tr>
+              <th>Block Height</th>
+              <th>Age</th>
+              <th>Txn Count</th>
+              <th>Vote Count</th>
+              <th>Ticket Count</th>
+              <th>Size</th>
+            </tr>
           </thead>
           <tbody>
-            
+            {{ range . }}
+            <tr>
+              <td>{{ .VerboseBlock.Height }}</td>
+              <td>{{ .VerboseBlock.Time }}</td>
+              <td>20</td>
+              <td>20</td>
+              <td>20</td>
+              <td>{{ .VerboseBlock.Size }} bytes</td>
+            </tr>
+            {{ end }}
+            <!-- 
+              DATA TO DISPLAY IN TABLE: 
+
+              block number - blocktime - reg transaction # - vote # - ticket purchases # - size
+            -->
+
+
           </tbody>
         </table>
       </div>
