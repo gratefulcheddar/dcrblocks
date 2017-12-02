@@ -20,21 +20,25 @@
             <tr>
               <th>Block Height</th>
               <th>Age</th>
-              <th>Txn Count</th>
-              <th>Vote Count</th>
-              <th>Ticket Count</th>
+              <th>Transactions</th>
+              <th>Votes</th>
+              <th>Tickets</th>
+              <th>Revocations</th>
+              <th>Reward</th>
               <th>Size</th>
             </tr>
           </thead>
           <tbody>
             {{ range . }}
             <tr>
-              <td>{{ .VerboseBlock.Height }}</td>
-              <td>{{ .VerboseBlock.Time }}</td>
-              <td>20</td>
-              <td>20</td>
-              <td>20</td>
-              <td>{{ .VerboseBlock.Size }} bytes</td>
+              <td><a href="/block/{{ .Height }}">{{ .Height }}</a></td>
+              <td>{{ .Age }} Minutes</td>
+              <td>{{ .TxnCount }}</td>
+              <td>{{ .VoteCount }}</td>
+              <td>{{ .TicketCount }}</td>
+              <td>{{ .RevokeCount }}</td>
+              <td>{{ .Reward }}</td>
+              <td>{{ .Size }} bytes</td>
             </tr>
             {{ end }}
             <!-- 
