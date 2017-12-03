@@ -1,0 +1,33 @@
+th.indexTableTitle {
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+.col-1 {
+  width: 70px;
+}
+.col-2 {
+  width: 90px;
+}
+.col-3 {
+  width: 105px;
+}
+.col-4 {
+  width: 60px;
+}
+.col-5 {
+  width: 65px;
+}
+.col-6 {
+  width: 105px;
+}
+.col-7 {
+  width: 75px;
+}
+.col-8 {
+  width: 105px;
+}
+#indexTable td {
+  text-align: center;
+}

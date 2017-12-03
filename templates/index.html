@@ -2,6 +2,7 @@
 <html>
   <head>
     {{ template "partial_head" }}
+    <link rel="stylesheet" href="/static/index.css" type='text/css'>
     <title>
       DCRBLOCKS by gratefulcheddar
     </title>
@@ -15,17 +16,27 @@
     </section>
     <section class="container">
       <div>
-        <table class="indexTable">
+        <table id="indexTable" class="alternating-colors">
+          <colgroup>
+            <col class="col-1">
+            <col class="col-2">
+            <col class="col-3">
+            <col class="col-4">
+            <col class="col-5">
+            <col class="col-6">
+            <col class="col-7">
+            <col class="col-8">
+          </colgroup>
           <thead>
             <tr>
-              <th>Block Height</th>
-              <th>Age</th>
-              <th>Transactions</th>
-              <th>Votes</th>
-              <th>Tickets</th>
-              <th>Revocations</th>
-              <th>Reward</th>
-              <th>Size</th>
+              <th class="indexTableTitle">Block</th>
+              <th class="indexTableTitle">Age</th>
+              <th class="indexTableTitle">Transactions</th>
+              <th class="indexTableTitle">Votes</th>
+              <th class="indexTableTitle">Tickets</th>
+              <th class="indexTableTitle">Revocations</th>
+              <th class="indexTableTitle">Reward</th>
+              <th class="indexTableTitle">Size (Bytes)</th>
             </tr>
           </thead>
           <tbody>
@@ -37,8 +48,8 @@
               <td>{{ .VoteCount }}</td>
               <td>{{ .TicketCount }}</td>
               <td>{{ .RevokeCount }}</td>
-              <td>{{ .Reward }}</td>
-              <td>{{ .Size }} bytes</td>
+              <td>{{ printf "%.4f" .Reward }}</td>
+              <td>{{ .Size }}</td>
             </tr>
             {{ end }}
             <!-- 
