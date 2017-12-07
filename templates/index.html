@@ -48,17 +48,10 @@
               <td>{{ .VoteCount }}</td>
               <td>{{ .TicketCount }}</td>
               <td>{{ .RevokeCount }}</td>
-              <td>{{ printf "%.4f" .Reward }}</td>
+              <td>{{ printf "%.2f" .Reward }} DCR</td>
               <td>{{ .Size }}</td>
             </tr>
             {{ end }}
-            <!-- 
-              DATA TO DISPLAY IN TABLE: 
-
-              block number - blocktime - reg transaction # - vote # - ticket purchases # - size
-            -->
-
-
           </tbody>
         </table>
       </div>
