@@ -45,22 +45,20 @@ func handleTransaction(w http.ResponseWriter, r *http.Request, client *rpcclient
 
 		transactionType := displayTransaction.RawTransactionVerbose.Vout[0].ScriptPubKey.Type
 
-		if transactionType == "stakesubmission" {
+		if displayTransaction.RawTransactionVerbose.Vin[0].IsCoinBase() {
+			displayTransaction.Type = "Coinbase"
+		} else if displayTransaction.RawTransactionVerbose.Vin[0].IsStakeBase() {
+			displayTransaction.Type = "Vote"
+			displayTransaction.Votes = parseVoteScript(displayTransaction.RawTransactionVerbose.Vout[1].ScriptPubKey.Hex)
+		} else if transactionType == "stakesubmission" {
 			// Ticket Purchase
 			displayTransaction.Type = "Ticket Purchase"
-		} else if transactionType == "scripthash" {
-			// Coinbase
-			displayTransaction.Type = "Coinbase"
 		} else if transactionType == "pubkeyhash" {
 			// Regular Transaction
 			displayTransaction.Type = "Regular Transaction"
 		} else if transactionType == "stakerevoke" {
 			// Revocation
 			displayTransaction.Type = "Revocation"
-		} else if displayTransaction.RawTransactionVerbose.Vout[2].ScriptPubKey.Type == "stakegen" {
-			// Vote
-			displayTransaction.Type = "Vote"
-			displayTransaction.Votes = parseVoteScript(displayTransaction.RawTransactionVerbose.Vout[1].ScriptPubKey.Hex)
 		}
 
 		displayTransaction.Time = time.Unix(displayTransaction.RawTransactionVerbose.Time, 0)
